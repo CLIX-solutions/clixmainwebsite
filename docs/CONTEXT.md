@@ -25,6 +25,10 @@ Line format:
   (paid). `data-umami-event` rejected: the tracker forces a full page load on links.
   `data-domains` = live host, so dev and previews never count. **Not deployed, no build run.**
   CRM tab waits on the share URL. → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **Shipped**: `32e7261` → PR #20 → merged as `a81441d`. Vercel preview
+  build passed on both projects this repo deploys (`clixmainwebsite`, `clix-version3`); the Umami
+  tag was read back from the served HTML of `/` and `/he` ~45 s after the merge. Awaiting the
+  user's Umami Realtime check. → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 

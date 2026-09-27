@@ -1,7 +1,7 @@
 # Feature: Site analytics (Umami)
 
-**Status:** `building` — site side in code 2026-09-27, **not deployed, not viewed, no build run**;
-the CRM tab waits on the share URL.
+**Status:** `review` — site side **live on clixsolutions.info since 2026-09-27** (PR #20, merge
+`a81441d`); not yet confirmed in Umami's Realtime view. The CRM tab waits on the share URL.
 **Started:** 2026-09-27
 **Slug:** `analytics` · registry row: [docs/SECTIONS.md](../../docs/SECTIONS.md)
 **Code:** [src/lib/umami.ts](../../src/lib/umami.ts) ·
@@ -95,7 +95,8 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [x] Tracker in `<head>` of both root layouts, after the Google Ads tag
 - [x] Contact (with `where`), WhatsApp, Email, Phone clicks
 - [x] Form sent — accepted submissions only, both forms
-- [ ] Deployed to the live host
+- [x] Deployed to the live host — PR #20, merge `a81441d`; the tag was read back out of the
+      served HTML of `/` and `/he` ~45 s after the merge
 - [ ] Umami Realtime shows a live-site visit (ad blocker off)
 - [ ] Each click lands once per click on the Events page
 - [ ] A Contact button is still a soft navigation with its view transition (no full reload)
@@ -104,7 +105,8 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [ ] Share URL created (Overview + Events)
 - [ ] Analytics tab in Clix-CRM
 - [ ] "Where they stop" answered
-- [ ] `npm run build` — not run; the user verifies (standing rule)
+- [x] Build — passed in Vercel's preview for PR #20, on both projects this repo deploys
+      (`clixmainwebsite`, `clix-version3`); not run locally (standing rule)
 
 ## Open questions
 
