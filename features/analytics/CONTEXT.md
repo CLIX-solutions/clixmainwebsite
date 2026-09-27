@@ -10,19 +10,50 @@ with no code scanning.
 
 ## Current state
 
-Umami's tracker, the click listener and the "Form sent" event are **live on clixsolutions.info
-(both locales) since 2026-09-27** — PR #20, merge `a81441d`. The build passed on Vercel; the tag was
-read back from the served HTML. **Not yet confirmed from Umami's side** (the user's Realtime
-check). Still to do: the share URL (the user creates it in Umami), the Analytics tab in Clix-CRM
-(needs that URL), and an answer for "where they stop".
+Umami's tracker, the click listener and the "Form sent" event are live on
+`www.clixsolutions.info` (now the primary host) and the bare host, both locales. **Counting only
+since PR #22 (merged 10:58 UTC 2026-09-27)** — the first deploy counted nothing; see the log entry
+"zero visits". Umami's receiving side is proven (a replayed pageview was accepted and shows in the
+dashboard). **A real browser visit has not yet been seen in Realtime.** Still to do: the share URL,
+the Analytics tab in Clix-CRM, "where they stop", and the canonical-host decision.
 
 **Status:** `review`
-**Next action:** the user checks Umami → Realtime with the ad blocker off, sends the share URL, and
-says whether the Heatmaps switch exists on the free plan; then build the CRM tab.
+**Next action:** the user hard-refreshes the live site, clicks a Contact button, and checks
+Realtime (expect a new view AND 1 event); then sends the share URL and the Heatmaps answer.
 
 ---
 
 ## Log
+
+### 2026-09-27 — zero visits after the first deploy: the www redirect
+
+**Symptom:** Umami Realtime showed 0 views after the user browsed the live site with AdBlock
+paused on it.
+
+**Root cause:** the user had moved the repo to the `CLIX-solutions` GitHub org and deployed it on
+the org's own Vercel, which made `www.clixsolutions.info` primary: the bare host went from serving
+200 (10:04 UTC) to answering **308 → `www.`** (10:53 UTC). The tracker's `data-domains` check is an
+exact `location.hostname` match and listed only `clixsolutions.info`, so on `www.` it disabled
+itself — no request, no console error, nothing to see.
+
+**Evidence, one boundary at a time:** tag in the served HTML ✓ → tracker downloadable ✓ → Umami
+accepts a pageview replayed exactly as the tracker builds it (`POST gateway.umami.is/api/send` →
+200 with `cache`/`sessionId`/`visitId`, no `disabled`) ✓ → bare host 308s to `www.`, whose HTML
+carried `data-domains="clixsolutions.info"` ✗.
+
+**Fix:** `UMAMI_DOMAINS` = `<host>,www.<host>` (`f3e499f`, PR #22, merged by the user at 10:58 UTC).
+The served HTML of `www.` now carries `data-domains="clixsolutions.info,www.clixsolutions.info"`.
+
+**Worth keeping**
+- ⚠️ **One test pageview is in the data** — the replay above, sent with curl from the user's own
+  machine at **10:52 UTC (6:52 PM local)**, path `/`. It is not a visitor. It made the user think
+  the site was counting before the fix was live; say so up front if it ever confuses a reading.
+- The repo moved: PR #20 lives on `TheSuperShyy/clixmainwebsite`, #22 on
+  `CLIX-solutions/clixmainwebsite`. Local `origin` still names the old URL; GitHub redirects it.
+- ⚠️ **`lib/site.ts`'s measured canonical is now stale.** It says the bare host is canonical and
+  `www.` redirects to it; the reverse is now true, so canonicals and the sitemap point at a URL
+  that redirects. Asked the user: make the bare host primary in Vercel, or move SITE_URL to `www.`.
+  Not changed until they choose.
 
 ### 2026-09-27 — shipped
 

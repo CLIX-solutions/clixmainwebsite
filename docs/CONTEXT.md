@@ -29,6 +29,12 @@ Line format:
   build passed on both projects this repo deploys (`clixmainwebsite`, `clix-version3`); the Umami
   tag was read back from the served HTML of `/` and `/he` ~45 s after the merge. Awaiting the
   user's Umami Realtime check. → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **First deploy counted zero; fixed.** The user had moved the repo to the
+  `CLIX-solutions` org and redeployed on the org's Vercel, which made `www.` primary (bare host now
+  308s to it); `data-domains` listed only the bare host and the tracker's match is exact, so it went
+  silent on `www.`. `UMAMI_DOMAINS` now lists both (`f3e499f`, PR #22, merged 10:58 UTC; verified in
+  the served HTML). ⚠️ One curl test pageview is in the data at 10:52 UTC. ⚠️ `lib/site.ts`'s
+  bare-host canonical is now stale — decision asked of the user. → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 

@@ -1,7 +1,9 @@
 # Feature: Site analytics (Umami)
 
-**Status:** `review` — site side **live on clixsolutions.info since 2026-09-27** (PR #20, merge
-`a81441d`); not yet confirmed in Umami's Realtime view. The CRM tab waits on the share URL.
+**Status:** `review` — live on `www.clixsolutions.info` (primary) and the bare host; **counting
+since PR #22, 2026-09-27 10:58 UTC** — the first deploy (PR #20) counted nothing, see CONTEXT.md
+"zero visits". A real browser visit is not yet confirmed in Realtime. The CRM tab waits on the
+share URL.
 **Started:** 2026-09-27
 **Slug:** `analytics` · registry row: [docs/SECTIONS.md](../../docs/SECTIONS.md)
 **Code:** [src/lib/umami.ts](../../src/lib/umami.ts) ·
@@ -79,9 +81,10 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
   same-tab `<a>` carrying that attribute, Umami's capture-phase listener calls `preventDefault()`,
   sends, then assigns `location.href` — a full page load. Every Contact button would lose its soft
   navigation and view transition. `umami.track()` from our listener leaves the click alone.
-- **`data-domains` = the SITE_URL host.** Exact `location.hostname` match in the tracker, so
-  localhost:3001 and Vercel previews never count. Nothing is counted until the live host serves
-  this build.
+- **`data-domains` = the SITE_URL host AND its `www.` twin.** Exact `location.hostname` match in
+  the tracker, so localhost:3001 and Vercel previews never count. Both spellings, because the
+  redirect between them is a Vercel setting and it flipped on the day this shipped — with one
+  host listed, the tracker went silent on the other (CONTEXT.md, "zero visits").
 - **No `data-exclude-search`.** It would strip the query string, and with it the UTM / `gclid`
   attribution Umami reads — i.e. which visits came from Google Ads.
 - **"Form sent" lives inside the Ads conversion's gate**, not in each form's `sent` branch: the
@@ -113,6 +116,9 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [ ] Is the **Heatmaps** switch (website settings → Replays & Heatmaps) on the free plan? If not,
       Microsoft Clarity (free, no limits) is the fallback for scroll depth, for the user only.
 - [ ] Data region picked at signup — EU was advised; not confirmed.
+- [ ] **Canonical host.** Vercel now makes `www.` primary (bare host 308s to it) while
+      `lib/site.ts` still declares the bare host canonical. Make the bare host primary in Vercel,
+      or move SITE_URL to `www.` — the user's call. (Umami counts both either way.)
 - [ ] Privacy policy names "statistical tools" generically — does the business want Umami named?
 - [ ] Own visits: `localStorage.setItem("umami.disabled", "1")` in the console on the live site
       opts one browser out. Worth doing for the team's machines before the boss reads anything.
