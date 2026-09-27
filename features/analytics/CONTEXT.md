@@ -13,17 +13,34 @@ with no code scanning.
 Umami's tracker, the click listener and the "Form sent" event are live on
 `www.clixsolutions.info` (now the primary host) and the bare host, both locales. **Counting only
 since PR #22 (merged 10:58 UTC 2026-09-27)** — the first deploy counted nothing; see the log entry
-"zero visits". Umami's receiving side is proven (a replayed pageview was accepted and shows in the
-dashboard). **A real browser visit has not yet been seen in Realtime.** Still to do: the share URL,
-the Analytics tab in Clix-CRM, "where they stop", and the canonical-host decision.
+"zero visits". **Confirmed end to end with a real browser visit** (log entry "confirmed
+counting"). Still to do: the share URL, the Analytics tab in Clix-CRM, "where they stop", and the
+canonical-host decision.
 
 **Status:** `review`
-**Next action:** the user hard-refreshes the live site, clicks a Contact button, and checks
-Realtime (expect a new view AND 1 event); then sends the share URL and the Heatmaps answer.
+**Next action:** the user sends the share URL and the Heatmaps answer; optionally resets the
+website's data first so the two test visitors don't reach the boss.
 
 ---
 
 ## Log
+
+### 2026-09-27 — confirmed counting
+
+**Done**
+- The user browsed the live site through a VPN exiting in Israel, so the visit could not be
+  mistaken for the curl test. Umami Activity at **11:08:40 UTC**: visitor from Israel, Chrome,
+  Windows 10/11; views `/` and `/contact`; event **`Contact button` on `/`**. Proves the tracker on
+  `www.`, page views on a client-side route change, and the click listener's naming.
+
+**Measurements worth keeping**
+- The data now holds **two test visitors**: Philippines 10:52:11 UTC (the curl replay) and Israel
+  11:08:40 UTC (the user's VPN check). Neither is a real visitor.
+- ⚠️ **Umami's Pages panel read `/` = 3 when `/` had 2 page views** — the third is the
+  `Contact button` event fired on `/`. The panel appears to count custom events against the page
+  they fired on; the top-line **Views** (3) counted page views only. Read Pages as "activity per
+  page", not page views, when explaining it to the boss.
+- The Activity feed shows the event name and page but not its `where` property.
 
 ### 2026-09-27 — zero visits after the first deploy: the www redirect
 

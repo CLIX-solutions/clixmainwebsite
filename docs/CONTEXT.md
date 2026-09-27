@@ -35,6 +35,10 @@ Line format:
   silent on `www.`. `UMAMI_DOMAINS` now lists both (`f3e499f`, PR #22, merged 10:58 UTC; verified in
   the served HTML). ⚠️ One curl test pageview is in the data at 10:52 UTC. ⚠️ `lib/site.ts`'s
   bare-host canonical is now stale — decision asked of the user. → [detail](../features/analytics/CONTEXT.md)
+- `analytics` — **Confirmed counting end to end**: the user's VPN visit (Israel, 11:08:40 UTC)
+  landed as views of `/` and `/contact` plus one `Contact button` event on `/`. Two test visitors
+  are in the data (curl, Philippines; VPN, Israel). Umami's Pages panel counts custom events
+  against their page (`/` read 3 with 2 views). → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 

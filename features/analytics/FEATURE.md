@@ -100,8 +100,9 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [x] Form sent — accepted submissions only, both forms
 - [x] Deployed to the live host — PR #20, merge `a81441d`; the tag was read back out of the
       served HTML of `/` and `/he` ~45 s after the merge
-- [ ] Umami Realtime shows a live-site visit (ad blocker off)
-- [ ] Each click lands once per click on the Events page
+- [x] Umami Realtime shows a live-site visit — the user through a VPN (Israel), 2026-09-27
+      11:08:40 UTC: views of `/` and `/contact`, country and browser resolved
+- [x] Each click lands once per click — one Contact click on `/` → one `Contact button` event
 - [ ] A Contact button is still a soft navigation with its view transition (no full reload)
 - [ ] "Form sent" seen once after a REAL enquiry — ⚠️ **never send a test submission**: it
       creates a real lead in the CRM and fires the WhatsApp/email workflow
