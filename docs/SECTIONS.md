@@ -534,5 +534,5 @@ real and readable by a non-technical reader.
 
 | # | Slug | Piece | Status | Notes |
 |---|---|---|---|---|
-| 1 | `analytics` | Tracker + click events + "Form sent" | **`building`** | In code for both locales, **not deployed, no build run**. Counts only on the live host (`data-domains`). Own document click listener instead of `data-umami-event`, which forces a full page load on links. |
+| 1 | `analytics` | Tracker + click events + "Form sent" | **`review`** | **Live since 2026-09-27** (PR #20, `a81441d`) in both locales; build passed on Vercel; tag verified in the served HTML. Not yet confirmed in Umami's Realtime. Counts only on the live host (`data-domains`). Own document click listener instead of `data-umami-event`, which forces a full page load on links. |
 | 2 | `analytics` | CRM Analytics tab | **`todo`** | Needs the Umami share URL. Lives in the Clix-CRM repo, not here. |

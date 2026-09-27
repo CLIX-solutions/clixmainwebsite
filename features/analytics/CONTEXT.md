@@ -10,19 +10,33 @@ with no code scanning.
 
 ## Current state
 
-Umami's tracker, the click listener and the "Form sent" event are in the code for both locales —
-**not deployed, not viewed, no build run.** Nothing is counted until `clixsolutions.info` serves
-this build; `data-domains` keeps localhost and previews out by design. Still to do: the share URL
-(the user creates it in Umami), the Analytics tab in Clix-CRM (needs that URL), and an answer for
-"where they stop".
+Umami's tracker, the click listener and the "Form sent" event are **live on clixsolutions.info
+(both locales) since 2026-09-27** — PR #20, merge `a81441d`. The build passed on Vercel; the tag was
+read back from the served HTML. **Not yet confirmed from Umami's side** (the user's Realtime
+check). Still to do: the share URL (the user creates it in Umami), the Analytics tab in Clix-CRM
+(needs that URL), and an answer for "where they stop".
 
-**Status:** `building`
-**Next action:** the user sends the share URL and says whether the Heatmaps switch exists on the
-free plan; then build the CRM tab.
+**Status:** `review`
+**Next action:** the user checks Umami → Realtime with the ad blocker off, sends the share URL, and
+says whether the Heatmaps switch exists on the free plan; then build the CRM tab.
 
 ---
 
 ## Log
+
+### 2026-09-27 — shipped
+
+**Done**
+- Committed `32e7261` on `dev`, PR #20 into `main`, merged as `a81441d` at 10:03 UTC.
+- Served HTML of `https://clixsolutions.info/` and `/he` checked with curl ~45 s after the merge:
+  both carry `<script defer src="https://cloud.umami.is/script.js" data-website-id="4bb5a2fb-…"
+  data-domains="clixsolutions.info">`.
+
+**Measurements worth keeping**
+- **This repo deploys to TWO Vercel projects**: `clixmainwebsite` and `clix-version3`. Both
+  build every PR; the preview passed on both. Which one owns `clixsolutions.info` was not checked
+  — the served HTML is what was verified.
+- Production picked up the merge in under a minute.
 
 ### 2026-09-27
 
