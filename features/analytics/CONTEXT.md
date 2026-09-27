@@ -19,8 +19,10 @@ canonical-host decision.
 
 **Google Ads lives here too** (marketing's numbers, same click-listener pattern): two conversions
 on tag `AW-18467124282` — "Submit lead form" (2026-09-22, from `sendContact`) and "WhatsApp click
-(wa.me)" (2026-09-27, `GoogleAdsClicks.tsx`). The WhatsApp one is **verified locally, not yet
-deployed** — see the newest log entry.
+(wa.me)" (2026-09-27, `GoogleAdsClicks.tsx`). The WhatsApp one is **live** — PR #23, merged
+`c57b80c`, confirmed on `www.clixsolutions.info` `/` and `/he` by the probe at 13:56 UTC on
+2026-09-27 (nothing registered). What remains is Dan's own check and the Ads UI's first real ping
+— see the two newest log entries.
 
 **Status:** `review`
 **Next action:** the user creates the share URL, pastes it into the handoff prompt (log entry
@@ -30,6 +32,30 @@ resets the website's data first so the two test visitors don't reach the boss.
 ---
 
 ## Log
+
+### 2026-09-27 — WhatsApp conversion shipped and seen on the live host
+
+**Done**
+- `b5e598d` (code) + `b1247ab` (notes) → PR #23 (`CLIX-solutions/clixmainwebsite`, `dev` → `main`)
+  → merged `c57b80c` at ~13:49 UTC. Both Vercel projects built the PR green.
+- The same probe against `https://www.clixsolutions.info/` and `/he` at 13:56 UTC: **ALL CHECKS
+  PASSED** on both — one `dataLayer` conversion per click with the exact arguments, one labelled
+  event on the wire (`doubleclick.net/pagead/viewthroughconversion/18467124282/…&label=l0O6CIjuwIcdELro5-VE`,
+  value 1, ILS, plus the `1p-conversion` twin), 3/3 pings blocked at the browser with 0 responses,
+  Umami blocked too, `mailto:` control silent. **Nothing was registered in Ads or Umami by this
+  run.**
+
+**Measurements worth keeping**
+- ⚠️ `gh api repos/…/deployments?sha=<merge>` listed **no production deployment** for the merge
+  commit in the 6½ minutes polled, yet the site was already serving the new build when the probe
+  ran. Vercel's production deploy for this org does not surface through GitHub's Deployments API
+  (the PR's preview checks do). Use the served behaviour as the deploy detector, not that API.
+- Production hydrates in ~10–90 ms after load (vs ~1 s on the dev server); the hydration gate in
+  the probe is still required — it is what makes the click land after the listeners exist.
+
+**Open / deferred**
+- Dan's own DevTools check, and the Ads UI moving the action from "Unverified" to recording once
+  a real click lands.
 
 ### 2026-09-27 — Google Ads: WhatsApp click conversion
 
@@ -104,10 +130,11 @@ in the root layout, which is what shipped.
   from reading the code.
 
 **Open / deferred**
-- Deploy (PR `dev` → `main`), then the same probe against `https://www.clixsolutions.info/` with
-  blocking on (Umami included, so no test visitor), then Dan's own DevTools check. ⚠️ **His click
-  registers a REAL conversion** unless he blocks `doubleclick.net` and `google.com/pagead` in
-  DevTools → Network request blocking first.
+- ~~Deploy, then the same probe against the live host~~ — done, see the entry above. Dan's own
+  DevTools check is still his to run. ⚠️ **His click registers a REAL conversion** unless he
+  blocks `doubleclick.net` and `google.com/pagead` in DevTools → Network request blocking first
+  — and the request to look for is `doubleclick.net/…/viewthroughconversion/…label=l0O6CIjuwIcdELro5-VE`,
+  not `googleadservices.com`.
 - Google Ads shows the action as unverified until the first real ping lands (up to a few hours).
   Whether repeat clicks count "Every" or "One" per ad click is the action's Count setting — his
   side, not the site's.

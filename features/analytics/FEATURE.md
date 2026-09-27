@@ -124,8 +124,10 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [x] Google Ads `WhatsApp click (wa.me)` — one labelled conversion ping per click on `/` and
       `/he`, DevTools-protocol probe 2026-09-27 with Google blocked at the browser (nothing
       registered); `Submit lead form` untouched (function byte-identical to HEAD)
-- [ ] The same WhatsApp ping seen on the live host after deploy (probe, blocking on), then Dan's
-      own DevTools check
+- [x] The same WhatsApp ping seen on the live host after deploy — probe against
+      `www.clixsolutions.info` `/` and `/he`, 2026-09-27 13:56 UTC, all checks passed, Google and
+      Umami blocked so nothing was registered
+- [ ] Dan's own DevTools check
 - [ ] Google Ads lists `WhatsApp click (wa.me)` as recording conversions
 - [ ] A Contact button is still a soft navigation with its view transition (no full reload)
 - [ ] "Form sent" seen once after a REAL enquiry — ⚠️ **never send a test submission**: it

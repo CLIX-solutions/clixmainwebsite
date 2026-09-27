@@ -47,6 +47,11 @@ Line format:
   registered. ⚠️ gtag sends it to `doubleclick.net/…/viewthroughconversion/` with `label=`, not the
   `googleadservices` URL Dan's QA note names. tsc / eslint / build clean. **Not yet deployed.**
   → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **Shipped**: `b5e598d` + `b1247ab` → PR #23 → merged `c57b80c`
+  (~13:49 UTC). The live probe on `www.clixsolutions.info` `/` and `/he` at 13:56 UTC passed every
+  check with nothing registered. ⚠️ GitHub's Deployments API never listed the production deploy;
+  served behaviour is the detector. Open: Dan's own DevTools check, the Ads UI's first real ping.
+  → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 
