@@ -523,3 +523,16 @@ instruction. **Two of the four are cheaper to make true than to amend** — see 
 |---|---|---|---|
 | 1 | `privacy-hero` | **`review`** | Dark band, `data-nav-theme="dark"`, every value borrowed from `ContactHero` (`pt-[198px]`, 14px `muted` eyebrow, 44/48px `<h1>`). Last-updated line is `paper-soft` not `muted` — it carries information found nowhere else on the page, so it does not get the eyebrow's sub-AA treatment. |
 | 2 | `privacy-body` | **`review`** | Light band, ten numbered sections + closing line. ⚠️ **THIS IS A LEGAL INSTRUMENT — do not reword anything.** Hebrew is the SOURCE (`he/privacy.ts`), English a machine translation. ⚠️ **It shipped under an on-page note that the Hebrew governs and the user had that note REMOVED the same day**, so the two routes now present as equally authoritative versions of one legal document with nothing on either page resolving a conflict; `he/privacy.ts` is still the source and still right by construction. Its absence is a decision — do not re-add it without asking. ⚠️ **The contact details are `{email}`/`{phone}` PLACEHOLDERS, not literals** — the published policy prints the stale `info@clixsolution.com` four times as the channel for exercising a statutory data right, so the page substitutes `CONTACT_EMAIL`/`CONTACT_PHONE` from `src/lib/contact.ts`; `interpolate()` is not used because these must be anchors. ⚠️ **`items` vs `paras` is an editorial split, not the source's** — the original is `<p>` throughout with no `<ul>`, and the enumerations were separated so a screen reader announces them as lists; it changes no word. Render order is items-then-paras and **section 06 is the only one that depends on it** (two rights, then a procedural note). ⚠️ **THREE POLICY STATEMENTS DO NOT DESCRIBE THIS BUILD** and were reported rather than patched: a phone number is listed as collected (no phone field on the form), statistical measurement is claimed (no analytics exists on this site), and Google is not named as a processor although the footer's map sets its cookies with no consent gate. Indexable, no `robots` guard — the content belongs to the company it is about. Unticked: never looked at in a browser; Hebrew unread by a native speaker; **English translation unreviewed by a lawyer**. |
+
+## Site-wide: analytics (Umami)
+
+Started 2026-09-27. Spec, event list and decisions: [features/analytics/](../features/analytics/).
+
+**Not a section and not a clone of anything** — visitor numbers for the business, read at
+cloud.umami.is and (planned) in a Clix-CRM tab. No fidelity bar; its bar is that the numbers are
+real and readable by a non-technical reader.
+
+| # | Slug | Piece | Status | Notes |
+|---|---|---|---|---|
+| 1 | `analytics` | Tracker + click events + "Form sent" | **`building`** | In code for both locales, **not deployed, no build run**. Counts only on the live host (`data-domains`). Own document click listener instead of `data-umami-event`, which forces a full page load on links. |
+| 2 | `analytics` | CRM Analytics tab | **`todo`** | Needs the Umami share URL. Lives in the Clix-CRM repo, not here. |

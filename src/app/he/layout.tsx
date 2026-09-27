@@ -35,6 +35,8 @@ import { I18nProvider } from "@/lib/i18n/LocaleProvider";
 import CookieBanner from "@/components/legal/CookieBanner";
 import AccessibilityGate from "@/components/a11y/AccessibilityGate";
 import GoogleAdsTag from "@/components/analytics/GoogleAdsTag";
+import UmamiTag from "@/components/analytics/UmamiTag";
+import UmamiClicks from "@/components/analytics/UmamiClicks";
 import { DICTIONARIES } from "@/lib/i18n/dictionary";
 import { HTML_LANG, DIRECTION } from "@/lib/i18n/config";
 import { seedLocale } from "@/lib/i18n/server";
@@ -97,9 +99,10 @@ export default function HeRootLayout({
     <html lang={HTML_LANG.he} dir={DIRECTION.he} data-scroll-behavior="smooth">
       {/* An explicit <head> so the Google Ads tag is the first thing in it, as asked. Next
           merges its own metadata and stylesheet tags in after it. Mounted in BOTH root
-          layouts; see GoogleAdsTag.tsx. */}
+          layouts; see GoogleAdsTag.tsx. Umami's tracker follows it; see UmamiTag.tsx. */}
       <head>
         <GoogleAdsTag />
+        <UmamiTag />
       </head>
       <body>
         <I18nProvider locale="he" chrome={DICTIONARIES.he.chrome}>
@@ -112,6 +115,9 @@ export default function HeRootLayout({
               Exactly one of them ever renders — see AccessibilityGate. */}
           <AccessibilityGate />
         </I18nProvider>
+        {/* Renders nothing: one document click listener that reports Contact / WhatsApp /
+            Email / Phone clicks to Umami. Outside I18nProvider — it reads no strings. */}
+        <UmamiClicks />
       </body>
     </html>
   );
