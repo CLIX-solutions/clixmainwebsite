@@ -38,7 +38,7 @@ The user's constraints, in the order they arrived:
 |---|---|---|
 | cloud.umami.is → website "Clix website" | the account owner (the user) | account created 2026-09-27 |
 | Share URL (Overview + Events) | anyone with the link, no login | **not created yet** |
-| Analytics tab in Clix-CRM, iframing the share URL | the boss | **not built** — needs the share URL; lives in the Clix-CRM repo |
+| Analytics tab in Clix-CRM, iframing the share URL | the boss | **not built** — handed to a session in the Clix-CRM repo; ⚠️ that repo's CSP `frame-src` must allow the share origin first |
 
 Free Hobby plan, as listed by third parties (Umami's own pricing page renders client-side and
 could not be read): **100K events/month, 3 websites, 6 months of data.** Umami's FAQ describes it

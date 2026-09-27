@@ -18,12 +18,30 @@ counting"). Still to do: the share URL, the Analytics tab in Clix-CRM, "where th
 canonical-host decision.
 
 **Status:** `review`
-**Next action:** the user sends the share URL and the Heatmaps answer; optionally resets the
-website's data first so the two test visitors don't reach the boss.
+**Next action:** the user creates the share URL, pastes it into the handoff prompt (log entry
+"CRM tab handed off"), and runs that prompt in a session opened in the Clix-CRM repo. Optionally
+resets the website's data first so the two test visitors don't reach the boss.
 
 ---
 
 ## Log
+
+### 2026-09-27 — CRM tab handed off
+
+**Decisions**
+- The Analytics tab is built by a Claude session opened in **Clix-CRM**, not from here. That repo
+  has its own CLAUDE.md, a strict CI (RLS / zod coverage, forbid-patterns, bundle-scan) and its
+  own deploy, none of which load in a session rooted here. This repo's part was the handoff
+  prompt, given to the user in chat: embed the share URL in an iframe, URL in a server-side env
+  var, page role-gated, nav labels in every CRM locale, show before deploying.
+
+**Measurements worth keeping**
+- ⚠️ **Clix-CRM's own CSP blocks the embed as it stands**: `next.config.ts` →
+  `frame-src 'self' https://*.supabase.co https://view.officeapps.live.com`. The share link's
+  origin has to be added there, and to any reverse-proxy CSP (its planning docs describe Caddy
+  setting one). Its `frame-ancestors 'none'` / `X-Frame-Options: DENY` govern the CRM being
+  framed, not framing others — leave them.
+- Anyone holding the share link reads the stats with no login, so the CRM page must be role-gated.
 
 ### 2026-09-27 — confirmed counting
 
