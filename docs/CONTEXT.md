@@ -29,6 +29,24 @@ Line format:
   build passed on both projects this repo deploys (`clixmainwebsite`, `clix-version3`); the Umami
   tag was read back from the served HTML of `/` and `/he` ~45 s after the merge. Awaiting the
   user's Umami Realtime check. → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **First deploy counted zero; fixed.** The user had moved the repo to the
+  `CLIX-solutions` org and redeployed on the org's Vercel, which made `www.` primary (bare host now
+  308s to it); `data-domains` listed only the bare host and the tracker's match is exact, so it went
+  silent on `www.`. `UMAMI_DOMAINS` now lists both (`f3e499f`, PR #22, merged 10:58 UTC; verified in
+  the served HTML). ⚠️ One curl test pageview is in the data at 10:52 UTC. ⚠️ `lib/site.ts`'s
+  bare-host canonical is now stale — decision asked of the user. → [detail](../features/analytics/CONTEXT.md)
+- `analytics` — **Confirmed counting end to end**: the user's VPN visit (Israel, 11:08:40 UTC)
+  landed as views of `/` and `/contact` plus one `Contact button` event on `/`. Two test visitors
+  are in the data (curl, Philippines; VPN, Israel). Umami's Pages panel counts custom events
+  against their page (`/` read 3 with 2 views). → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **Google Ads "WhatsApp click (wa.me)" conversion** (Dan's request:
+  label `l0O6CIjuwIcdELro5-VE`, 1.0 ILS, beacon). New `GoogleAdsClicks.tsx` beside
+  `UmamiClicks.tsx` in both root layouts; `reportWhatsAppConversion()` in `gads.ts`; shared
+  `isWhatsAppHost()` in `contact.ts`. Form conversion byte-identical. Proven by a DevTools-protocol
+  probe on `/` and `/he` with Google blocked at the browser: one labelled ping per click, none
+  registered. ⚠️ gtag sends it to `doubleclick.net/…/viewthroughconversion/` with `label=`, not the
+  `googleadservices` URL Dan's QA note names. tsc / eslint / build clean. **Not yet deployed.**
+  → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 

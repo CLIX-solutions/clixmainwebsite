@@ -39,3 +39,17 @@ export const CONTACT = {
      protecting one literal that changes when the company changes phone provider. */
   whatsapp: "https://wa.me/972559483457",
 } as const;
+
+/* Hosts a WhatsApp chat link lives on. Shared by the Umami click listener (UmamiClicks.tsx) and
+   the Google Ads click conversion (GoogleAdsClicks.tsx) so the two counts agree by construction.
+   Hostname of the RESOLVED url, not a substring of the href: a link that merely mentions wa.me
+   in its query string is not a WhatsApp link, and `api.whatsapp.com` needs no second pattern.
+   A superset of the marketer's "wa.me / api.whatsapp.com" (2026-09-27): `web.` / `chat.` count
+   too; the site's own links are all `CONTACT.whatsapp` above. */
+export function isWhatsAppHost(hostname: string): boolean {
+  return (
+    hostname === "wa.me" ||
+    hostname === "whatsapp.com" ||
+    hostname.endsWith(".whatsapp.com")
+  );
+}

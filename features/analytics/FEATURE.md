@@ -1,13 +1,18 @@
 # Feature: Site analytics (Umami)
 
-**Status:** `review` — site side **live on clixsolutions.info since 2026-09-27** (PR #20, merge
-`a81441d`); not yet confirmed in Umami's Realtime view. The CRM tab waits on the share URL.
+**Status:** `review` — live on `www.clixsolutions.info` (primary) and the bare host; **counting
+since PR #22, 2026-09-27 10:58 UTC** — the first deploy (PR #20) counted nothing, see CONTEXT.md
+"zero visits". A real browser visit is not yet confirmed in Realtime. The CRM tab waits on the
+share URL.
 **Started:** 2026-09-27
 **Slug:** `analytics` · registry row: [docs/SECTIONS.md](../../docs/SECTIONS.md)
 **Code:** [src/lib/umami.ts](../../src/lib/umami.ts) ·
 [UmamiTag.tsx](../../src/components/analytics/UmamiTag.tsx) ·
 [UmamiClicks.tsx](../../src/components/analytics/UmamiClicks.tsx) · "Form sent" in
-[contactRules.ts](../../src/components/contact/contactRules.ts) `sendContact`
+[contactRules.ts](../../src/components/contact/contactRules.ts) `sendContact` ·
+Google Ads: [src/lib/gads.ts](../../src/lib/gads.ts) ·
+[GoogleAdsClicks.tsx](../../src/components/analytics/GoogleAdsClicks.tsx) ·
+`isWhatsAppHost()` in [src/lib/contact.ts](../../src/lib/contact.ts) (shared by both listeners)
 
 ---
 
@@ -36,7 +41,7 @@ The user's constraints, in the order they arrived:
 |---|---|---|
 | cloud.umami.is → website "Clix website" | the account owner (the user) | account created 2026-09-27 |
 | Share URL (Overview + Events) | anyone with the link, no login | **not created yet** |
-| Analytics tab in Clix-CRM, iframing the share URL | the boss | **not built** — needs the share URL; lives in the Clix-CRM repo |
+| Analytics tab in Clix-CRM, iframing the share URL | the boss | **not built** — handed to a session in the Clix-CRM repo; ⚠️ that repo's CSP `frame-src` must allow the share origin first |
 
 Free Hobby plan, as listed by third parties (Umami's own pricing page renders client-side and
 could not be read): **100K events/month, 3 websites, 6 months of data.** Umami's FAQ describes it
@@ -59,6 +64,21 @@ The listener classifies by href, so it needs no list. For the record, the links 
 WhatsApp — Footer social row, `ContactChannels`, `ContactForm` aside. Email — Footer,
 `ContactChannels`, `ContactForm` aside, `LegalBody`. Phone — `LegalBody`.
 
+### Google Ads conversions (tag `AW-18467124282`)
+
+Marketing's numbers, on the same site, kept in this feature because the WhatsApp one uses the
+same click-listener pattern. Not Umami: these go to Google Ads only.
+
+| Ads action | Label (`send_to` after the slash) | Fires when | Source |
+|---|---|---|---|
+| `Submit lead form` | `wo7vCM3x-YAdELro5-VE` | `/api/contact` answered 2xx **and** the honeypot was empty — both forms | `sendContact` → `reportContactConversion` (`gads.ts`) |
+| `WhatsApp click (wa.me)` | `l0O6CIjuwIcdELro5-VE` | click on a `wa.me` / `whatsapp.com` link — same `isWhatsAppHost()` test as Umami's `WhatsApp` event | `GoogleAdsClicks` → `reportWhatsAppConversion` (`gads.ts`) |
+
+Both send `value: 1.0, currency: 'ILS'`; the WhatsApp one adds `transport_type: 'beacon'`. Two
+document click listeners run per click (Umami's and Ads'), on purpose — see CONTEXT.md
+2026-09-27 "Google Ads: WhatsApp click conversion" for the decision and for what gtag actually
+puts on the wire (`doubleclick.net/…/viewthroughconversion/…&label=…`, not `googleadservices`).
+
 ## The boss's questions → what answers them
 
 | Question | Answer | Status |
@@ -79,9 +99,10 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
   same-tab `<a>` carrying that attribute, Umami's capture-phase listener calls `preventDefault()`,
   sends, then assigns `location.href` — a full page load. Every Contact button would lose its soft
   navigation and view transition. `umami.track()` from our listener leaves the click alone.
-- **`data-domains` = the SITE_URL host.** Exact `location.hostname` match in the tracker, so
-  localhost:3001 and Vercel previews never count. Nothing is counted until the live host serves
-  this build.
+- **`data-domains` = the SITE_URL host AND its `www.` twin.** Exact `location.hostname` match in
+  the tracker, so localhost:3001 and Vercel previews never count. Both spellings, because the
+  redirect between them is a Vercel setting and it flipped on the day this shipped — with one
+  host listed, the tracker went silent on the other (CONTEXT.md, "zero visits").
 - **No `data-exclude-search`.** It would strip the query string, and with it the UTM / `gclid`
   attribution Umami reads — i.e. which visits came from Google Ads.
 - **"Form sent" lives inside the Ads conversion's gate**, not in each form's `sent` branch: the
@@ -97,8 +118,15 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [x] Form sent — accepted submissions only, both forms
 - [x] Deployed to the live host — PR #20, merge `a81441d`; the tag was read back out of the
       served HTML of `/` and `/he` ~45 s after the merge
-- [ ] Umami Realtime shows a live-site visit (ad blocker off)
-- [ ] Each click lands once per click on the Events page
+- [x] Umami Realtime shows a live-site visit — the user through a VPN (Israel), 2026-09-27
+      11:08:40 UTC: views of `/` and `/contact`, country and browser resolved
+- [x] Each click lands once per click — one Contact click on `/` → one `Contact button` event
+- [x] Google Ads `WhatsApp click (wa.me)` — one labelled conversion ping per click on `/` and
+      `/he`, DevTools-protocol probe 2026-09-27 with Google blocked at the browser (nothing
+      registered); `Submit lead form` untouched (function byte-identical to HEAD)
+- [ ] The same WhatsApp ping seen on the live host after deploy (probe, blocking on), then Dan's
+      own DevTools check
+- [ ] Google Ads lists `WhatsApp click (wa.me)` as recording conversions
 - [ ] A Contact button is still a soft navigation with its view transition (no full reload)
 - [ ] "Form sent" seen once after a REAL enquiry — ⚠️ **never send a test submission**: it
       creates a real lead in the CRM and fires the WhatsApp/email workflow
@@ -113,6 +141,9 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [ ] Is the **Heatmaps** switch (website settings → Replays & Heatmaps) on the free plan? If not,
       Microsoft Clarity (free, no limits) is the fallback for scroll depth, for the user only.
 - [ ] Data region picked at signup — EU was advised; not confirmed.
+- [ ] **Canonical host.** Vercel now makes `www.` primary (bare host 308s to it) while
+      `lib/site.ts` still declares the bare host canonical. Make the bare host primary in Vercel,
+      or move SITE_URL to `www.` — the user's call. (Umami counts both either way.)
 - [ ] Privacy policy names "statistical tools" generically — does the business want Umami named?
 - [ ] Own visits: `localStorage.setItem("umami.disabled", "1")` in the console on the live site
       opts one browser out. Worth doing for the team's machines before the boss reads anything.
