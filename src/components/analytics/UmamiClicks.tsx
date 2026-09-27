@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { trackEvent, type UmamiEvent } from "@/lib/umami";
+import { isWhatsAppHost } from "@/lib/contact";
 
 /* Every click the boss asked to count, named from the link it lands on.
  *
@@ -10,7 +11,9 @@ import { trackEvent, type UmamiEvent } from "@/lib/umami";
  *
  *   tel:                     → Phone
  *   mailto:                  → Email
- *   wa.me, *.whatsapp.com    → WhatsApp
+ *   wa.me, *.whatsapp.com    → WhatsApp   (`isWhatsAppHost()` in lib/contact.ts, shared with
+ *                                          GoogleAdsClicks.tsx since 2026-09-27 so the Ads
+ *                                          conversion and this event count the same clicks)
  *   /contact, /he/contact    → Contact button, with `where`: menu | footer | page
  *
  * `where` is read off the landmark the link sits in. The site has exactly one `<header>` (Nav.tsx —
@@ -40,9 +43,7 @@ function classify(
   } catch {
     return null;
   }
-  if (url.hostname === "wa.me" || url.hostname.endsWith("whatsapp.com")) {
-    return ["WhatsApp"];
-  }
+  if (isWhatsAppHost(url.hostname)) return ["WhatsApp"];
   if (url.origin === window.location.origin && CONTACT_PATH.test(url.pathname)) {
     const where = a.closest("header")
       ? "menu"

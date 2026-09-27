@@ -37,6 +37,7 @@ import AccessibilityGate from "@/components/a11y/AccessibilityGate";
 import GoogleAdsTag from "@/components/analytics/GoogleAdsTag";
 import UmamiTag from "@/components/analytics/UmamiTag";
 import UmamiClicks from "@/components/analytics/UmamiClicks";
+import GoogleAdsClicks from "@/components/analytics/GoogleAdsClicks";
 import { DICTIONARIES } from "@/lib/i18n/dictionary";
 import { HTML_LANG, DIRECTION } from "@/lib/i18n/config";
 import { seedLocale } from "@/lib/i18n/server";
@@ -132,9 +133,11 @@ export default function EnRootLayout({
               Exactly one of them ever renders — see AccessibilityGate. */}
           <AccessibilityGate />
         </I18nProvider>
-        {/* Renders nothing: one document click listener that reports Contact / WhatsApp /
-            Email / Phone clicks to Umami. Outside I18nProvider — it reads no strings. */}
+        {/* Render nothing: two document click listeners — one reports Contact / WhatsApp /
+            Email / Phone clicks to Umami, one reports WhatsApp clicks to Google Ads as a
+            conversion (GoogleAdsClicks.tsx). Outside I18nProvider — they read no strings. */}
         <UmamiClicks />
+        <GoogleAdsClicks />
       </body>
     </html>
   );
