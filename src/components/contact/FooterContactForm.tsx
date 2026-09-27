@@ -162,7 +162,7 @@ export default function FooterContactForm({ t }: { t: ContactFormDict }) {
     }
 
     setStatus("sending");
-    const result = await sendContact({ values, trap, consent }, t.errors);
+    const result = await sendContact({ values, trap, consent, form: "footer" }, t.errors);
 
     if (result.kind === "sent") {
       setStatus("sent");

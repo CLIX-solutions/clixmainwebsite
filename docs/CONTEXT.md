@@ -15,6 +15,17 @@ Line format:
 
 ---
 
+## 2026-09-27
+
+- `analytics` / `infra` — **Umami installed, site side** (the boss's "how many visit, where they
+  stop, how many leave, how many clicks"). Tracker in `<head>` of both root layouts after the Ads
+  tag; one document click listener counts Contact (`where`: menu/footer/page), WhatsApp, Email and
+  Phone; "Form sent" fires beside the Ads conversion in `sendContact` (new required `form` arg,
+  both callers updated). Chosen over GA4 + Clarity (too complex for the reader) and Plausible
+  (paid). `data-umami-event` rejected: the tracker forces a full page load on links.
+  `data-domains` = live host, so dev and previews never count. **Not deployed, no build run.**
+  CRM tab waits on the share URL. → [detail](../features/analytics/CONTEXT.md)
+
 ## 2026-09-22
 
 - `contact-page` — **Budget range slot reads "Optional" instead of "Choose one."** — copy-only;

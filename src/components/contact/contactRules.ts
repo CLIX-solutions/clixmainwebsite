@@ -18,6 +18,7 @@
 
 import type { Dict } from "@/lib/i18n/dictionary";
 import { reportContactConversion } from "@/lib/gads";
+import { trackEvent } from "@/lib/umami";
 
 /** The `contact.form` namespace, in either locale. The footer receives it from the server. */
 export type ContactFormDict = Dict["contact"]["form"];
@@ -137,13 +138,18 @@ export type SendResult =
   | { kind: "invalid"; errors: Errors }
   | { kind: "failed" };
 
+/* Which form a submission came from — reported to Umami with "Form sent" and nowhere else. The
+   values are what the Events page shows, so they are words, not keys. */
+export type ContactFormSource = "contact page" | "footer";
+
 /** POSTs one submission to /api/contact. Never throws — a network failure is `failed`. */
 export async function sendContact(
   {
     values,
     trap,
     consent,
-  }: { values: Values; trap: string; consent: boolean },
+    form,
+  }: { values: Values; trap: string; consent: boolean; form: ContactFormSource },
   e: ContactFormDict["errors"],
 ): Promise<SendResult> {
   try {
@@ -172,7 +178,12 @@ export async function sendContact(
          accepted submit calls `sendContact` exactly once, so it fires once. `!trap`: the route
          deliberately answers the honeypot with a 200 so a bot cannot learn it was caught (see
          route.ts) — that "success" is not a conversion. See src/lib/gads.ts for the rest. */
-      if (!trap) reportContactConversion();
+      if (!trap) {
+        reportContactConversion();
+        /* Umami's "Form sent" rides the same gate (2026-09-27): once per accepted submission,
+           never for the honeypot. `form` tells the two forms apart. See src/lib/umami.ts. */
+        trackEvent("Form sent", { form });
+      }
       return { kind: "sent" };
     }
     if (res.status === 429) return { kind: "rate-limited" };

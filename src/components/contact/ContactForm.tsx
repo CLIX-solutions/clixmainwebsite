@@ -583,7 +583,10 @@ export default function ContactForm() {
     setStatus("sending");
     /* The request and the reading of its response are ./contactRules.ts's `sendContact`, shared
        with the footer form. It never throws; a network failure comes back as `failed`. */
-    const result = await sendContact({ values, trap, consent }, t.errors);
+    const result = await sendContact(
+      { values, trap, consent, form: "contact page" },
+      t.errors,
+    );
 
     if (result.kind === "sent") {
       setStatus("sent");
