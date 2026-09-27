@@ -29,7 +29,7 @@
  * every Vercel preview stay out of the figures. The flip side: nothing is counted until the live
  * host serves this build. The host is read from SITE_URL, which is overridden per deployment
  * (lib/site.ts) — a second deployment on clix-solution.com would count under its own host.
- * `www.` needs no entry: it 307s to the bare host before any page renders.
+ * ⚠️ BOTH the bare host AND `www.` are listed — see UMAMI_DOMAINS for the outage that taught it.
  *
  * Cookieless: the tracker sets no cookie (it only READS `localStorage["umami.disabled"]`, the
  * per-browser opt-out), so it adds nothing the cosmetic cookie banner fails to cover. */
@@ -42,7 +42,13 @@ export const UMAMI_SCRIPT_SRC = "https://cloud.umami.is/script.js";
    Not a secret: it ships in every page's HTML. */
 export const UMAMI_WEBSITE_ID = "4bb5a2fb-bf39-4bec-bd36-0f6346697237";
 
-export const UMAMI_DOMAINS = new URL(SITE_URL).hostname;
+/* Both spellings of the live host, because the tracker's match is exact and the redirect between
+   them is a Vercel dashboard setting, not code. lib/site.ts had measured `www.` → bare; on
+   2026-09-27, within an hour of this shipping, the bare host started answering 308 → `www.`, so
+   every real visit landed on a hostname this list did not contain and the tracker sent NOTHING —
+   zero visits and no error anywhere. Listing both keeps it counting whichever way that points. */
+const LIVE_HOST = new URL(SITE_URL).hostname.replace(/^www\./, "");
+export const UMAMI_DOMAINS = `${LIVE_HOST},www.${LIVE_HOST}`;
 
 /* The event names ARE the labels on Umami's Events page — the boss reads them as-is, so they are
    plain words, not keys. Adding one here is the whole change to count something new. */
