@@ -9,7 +9,10 @@ share URL.
 **Code:** [src/lib/umami.ts](../../src/lib/umami.ts) ·
 [UmamiTag.tsx](../../src/components/analytics/UmamiTag.tsx) ·
 [UmamiClicks.tsx](../../src/components/analytics/UmamiClicks.tsx) · "Form sent" in
-[contactRules.ts](../../src/components/contact/contactRules.ts) `sendContact`
+[contactRules.ts](../../src/components/contact/contactRules.ts) `sendContact` ·
+Google Ads: [src/lib/gads.ts](../../src/lib/gads.ts) ·
+[GoogleAdsClicks.tsx](../../src/components/analytics/GoogleAdsClicks.tsx) ·
+`isWhatsAppHost()` in [src/lib/contact.ts](../../src/lib/contact.ts) (shared by both listeners)
 
 ---
 
@@ -61,6 +64,21 @@ The listener classifies by href, so it needs no list. For the record, the links 
 WhatsApp — Footer social row, `ContactChannels`, `ContactForm` aside. Email — Footer,
 `ContactChannels`, `ContactForm` aside, `LegalBody`. Phone — `LegalBody`.
 
+### Google Ads conversions (tag `AW-18467124282`)
+
+Marketing's numbers, on the same site, kept in this feature because the WhatsApp one uses the
+same click-listener pattern. Not Umami: these go to Google Ads only.
+
+| Ads action | Label (`send_to` after the slash) | Fires when | Source |
+|---|---|---|---|
+| `Submit lead form` | `wo7vCM3x-YAdELro5-VE` | `/api/contact` answered 2xx **and** the honeypot was empty — both forms | `sendContact` → `reportContactConversion` (`gads.ts`) |
+| `WhatsApp click (wa.me)` | `l0O6CIjuwIcdELro5-VE` | click on a `wa.me` / `whatsapp.com` link — same `isWhatsAppHost()` test as Umami's `WhatsApp` event | `GoogleAdsClicks` → `reportWhatsAppConversion` (`gads.ts`) |
+
+Both send `value: 1.0, currency: 'ILS'`; the WhatsApp one adds `transport_type: 'beacon'`. Two
+document click listeners run per click (Umami's and Ads'), on purpose — see CONTEXT.md
+2026-09-27 "Google Ads: WhatsApp click conversion" for the decision and for what gtag actually
+puts on the wire (`doubleclick.net/…/viewthroughconversion/…&label=…`, not `googleadservices`).
+
 ## The boss's questions → what answers them
 
 | Question | Answer | Status |
@@ -103,6 +121,12 @@ on every page view would un-bounce almost every visit and hollow out the bounce 
 - [x] Umami Realtime shows a live-site visit — the user through a VPN (Israel), 2026-09-27
       11:08:40 UTC: views of `/` and `/contact`, country and browser resolved
 - [x] Each click lands once per click — one Contact click on `/` → one `Contact button` event
+- [x] Google Ads `WhatsApp click (wa.me)` — one labelled conversion ping per click on `/` and
+      `/he`, DevTools-protocol probe 2026-09-27 with Google blocked at the browser (nothing
+      registered); `Submit lead form` untouched (function byte-identical to HEAD)
+- [ ] The same WhatsApp ping seen on the live host after deploy (probe, blocking on), then Dan's
+      own DevTools check
+- [ ] Google Ads lists `WhatsApp click (wa.me)` as recording conversions
 - [ ] A Contact button is still a soft navigation with its view transition (no full reload)
 - [ ] "Form sent" seen once after a REAL enquiry — ⚠️ **never send a test submission**: it
       creates a real lead in the CRM and fires the WhatsApp/email workflow

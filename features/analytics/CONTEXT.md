@@ -17,6 +17,11 @@ since PR #22 (merged 10:58 UTC 2026-09-27)** — the first deploy counted nothin
 counting"). Still to do: the share URL, the Analytics tab in Clix-CRM, "where they stop", and the
 canonical-host decision.
 
+**Google Ads lives here too** (marketing's numbers, same click-listener pattern): two conversions
+on tag `AW-18467124282` — "Submit lead form" (2026-09-22, from `sendContact`) and "WhatsApp click
+(wa.me)" (2026-09-27, `GoogleAdsClicks.tsx`). The WhatsApp one is **verified locally, not yet
+deployed** — see the newest log entry.
+
 **Status:** `review`
 **Next action:** the user creates the share URL, pastes it into the handoff prompt (log entry
 "CRM tab handed off"), and runs that prompt in a session opened in the Clix-CRM repo. Optionally
@@ -25,6 +30,87 @@ resets the website's data first so the two test visitors don't reach the boss.
 ---
 
 ## Log
+
+### 2026-09-27 — Google Ads: WhatsApp click conversion
+
+**Trigger:** Dan (marketing), by message: add a Google Ads conversion on clicks to `wa.me` /
+`api.whatsapp.com`; the tag (`AW-18467124282`) and the form-submit conversion already exist —
+*"do not change it"*. Ads action **"WhatsApp click (wa.me)"**, `send_to`
+`AW-18467124282/l0O6CIjuwIcdELro5-VE` (his note: lowercase L, zero, uppercase O, digit 6),
+`value 1.0`, `currency ILS`, `transport_type 'beacon'`. He suggested a document click listener
+in the root layout, which is what shipped.
+
+**Done**
+- `src/components/analytics/GoogleAdsClicks.tsx` (new, client): one capture-phase document click
+  listener, the shape of `UmamiClicks.tsx` — `closest("a[href]")` → `new URL(a.href)` →
+  `isWhatsAppHost(hostname)` → `reportWhatsAppConversion()`. Renders nothing. Mounted directly
+  after `<UmamiClicks />` in BOTH root layouts, outside `I18nProvider`.
+- `src/lib/gads.ts`: `WHATSAPP_CONVERSION_*` consts, `WHATSAPP_CONVERSION_SEND_TO` (env override
+  `NEXT_PUBLIC_GADS_WHATSAPP_LABEL`, empty = disabled), `reportWhatsAppConversion()` — a copy of
+  the contact one plus `transport_type: "beacon"`. **`reportContactConversion()` is byte-identical
+  to HEAD** (checked by script, function body and its consts). Comment-only corrections in the
+  same file: the header's call site (it is `contactRules.ts`'s `sendContact`, both forms — not
+  `ContactForm.tsx`), and the claim that an ad blocker leaves `window.gtag` undefined — it does
+  not; the inline bootstrap defines `gtag()` first, so a blocked call queues in `dataLayer` and
+  `true` means "pushed", not "sent".
+- `src/lib/contact.ts`: `isWhatsAppHost()` — `wa.me`, `whatsapp.com`, `*.whatsapp.com` — shared by
+  `UmamiClicks.classify` (one-line swap, behaviour-preserving for every real hostname) and the new
+  listener, so Umami's `WhatsApp` event and the Ads conversion count the same clicks by
+  construction.
+
+**Decisions**
+- A sibling component, not a branch inside `UmamiClicks`: Umami is the boss's numbers, Ads is
+  marketing's; either can be removed without touching the other, and a file named Umami never
+  reports to Google. Cost: one more `closest()` per click.
+- Hostname of the resolved URL, not Dan's `href*="wa.me/"` substring: no query-string false
+  positives, and `api.whatsapp.com` needs no second pattern. A superset of his two hosts
+  (`web.`, `chat.` count too); the site's own links are all `CONTACT.whatsapp`.
+- No `preventDefault` + `event_callback` navigation like Google's stock click snippet: all three
+  links are `target="_blank"`, the page never unloads, and copying it would make them same-tab.
+- The contact function was not refactored into a shared helper: frozen by request, and its path
+  cannot be exercised without creating a real lead, so a refactor of it would be unverifiable.
+- Not consent-gated — the recorded decision in `gads.ts`, unchanged.
+
+**Measurements worth keeping** (DevTools-protocol probe, headless Edge against the dev server,
+2026-09-27; the script lives in the session scratchpad, not the repo — rebuild it from
+`docs/reference/block-diff.js`'s launcher if needed)
+- **Hydration gate.** `document.readyState === "complete"` and gtag.js loaded come up to ~1 s
+  before React has hydrated in dev; a click before that reaches no `useEffect` listener — the
+  first run counted 0 conversions and Umami's listener was silent too. Poll for a
+  `__reactFiber$…` key on `<footer>` before clicking.
+- **What gtag actually sends for this event: NOT `navigator.sendBeacon`** (stubbed; never called,
+  despite `transport_type: "beacon"`). A `fetch` to
+  `googleads.g.doubleclick.net/pagead/viewthroughconversion/18467124282/?…&label=l0O6CIjuwIcdELro5-VE&value=1&currency_code=ILS`,
+  a first-party twin to `www.google.com/pagead/1p-conversion/18467124282/` with the same label,
+  and — only because the fetch was blocked — an `<img>` retry of the primary with a slightly
+  different URL. All share one `random=` value: **that is the key for "one event", not the URL.**
+  ⚠️ Dan's QA note says to look for `googleadservices.com` / `conversion`; on this tag it is
+  `doubleclick.net` / `viewthroughconversion` with `label=` in the query. The tag's page-load
+  ping uses the same path with no `label`.
+- **Blocked requests can be invisible to the inspector when the matcher is wrong, not when they
+  are blocked**: `Network.setBlockedURLs` did announce every request (`requestWillBeSent`, then
+  `loadingFailed` with `blockedReason: "inspector"`, 3/3, 0 responses) — the first probe saw
+  none only because it matched `googleadservices.com`. **No test conversion was registered**
+  from localhost, and Umami was blocked too.
+- Results on `/` and `/he`: one `dataLayer` entry per click — `["event","conversion",{send_to:
+  "AW-18467124282/l0O6CIjuwIcdELro5-VE", value: 1, currency: "ILS", transport_type: "beacon"}]` —
+  one conversion event on the wire carrying that label, Umami's listener saw the same click, and a
+  `mailto:` click through the same routine produced nothing on either channel.
+- `tsc` clean, `eslint` clean on the six touched files, `next build` passes (run locally this
+  time, beside the dev server, without incident).
+
+**Skills invoked**
+- `verification-before-completion` — the probe above is the evidence; nothing here is claimed
+  from reading the code.
+
+**Open / deferred**
+- Deploy (PR `dev` → `main`), then the same probe against `https://www.clixsolutions.info/` with
+  blocking on (Umami included, so no test visitor), then Dan's own DevTools check. ⚠️ **His click
+  registers a REAL conversion** unless he blocks `doubleclick.net` and `google.com/pagead` in
+  DevTools → Network request blocking first.
+- Google Ads shows the action as unverified until the first real ping lands (up to a few hours).
+  Whether repeat clicks count "Every" or "One" per ad click is the action's Count setting — his
+  side, not the site's.
 
 ### 2026-09-27 — CRM tab handed off
 

@@ -39,6 +39,14 @@ Line format:
   landed as views of `/` and `/contact` plus one `Contact button` event on `/`. Two test visitors
   are in the data (curl, Philippines; VPN, Israel). Umami's Pages panel counts custom events
   against their page (`/` read 3 with 2 views). → [detail](../features/analytics/CONTEXT.md)
+- `analytics` / `infra` — **Google Ads "WhatsApp click (wa.me)" conversion** (Dan's request:
+  label `l0O6CIjuwIcdELro5-VE`, 1.0 ILS, beacon). New `GoogleAdsClicks.tsx` beside
+  `UmamiClicks.tsx` in both root layouts; `reportWhatsAppConversion()` in `gads.ts`; shared
+  `isWhatsAppHost()` in `contact.ts`. Form conversion byte-identical. Proven by a DevTools-protocol
+  probe on `/` and `/he` with Google blocked at the browser: one labelled ping per click, none
+  registered. ⚠️ gtag sends it to `doubleclick.net/…/viewthroughconversion/` with `label=`, not the
+  `googleadservices` URL Dan's QA note names. tsc / eslint / build clean. **Not yet deployed.**
+  → [detail](../features/analytics/CONTEXT.md)
 
 ## 2026-09-22
 
