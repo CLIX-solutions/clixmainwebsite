@@ -6,20 +6,18 @@
  *
  * ⚠️ THE CLIP IS OURS, NOT THE TARGET'S. The original plays a Framer-hosted mp4 that is
  * rogo's property. This repo already removed rogo's `hero-original.mp4` once the repo went
- * public, for exactly that reason. As of 2026-09-29 this plays `public/video/clix-ad.mp4`
- * — clix's own 2:07 ad, 1920x1080 at 60fps, 41MB, H.264. The ad was delivered with an AI
- * voiceover; that was split off with BS-Roformer and only the music bed and sound effects
- * remain, so the audio sits ~10 LU below the voiced mix (-25.8 LUFS). Quiet behind the
- * Unmute toggle is the mix, not a broken track. Transcoded from the voice-free master
- * (`new-advertise-video-no-voice.mp4`, 55MB, kept untracked) with `libx264 -preset slow
- * -crf 23`, AAC 128k from the lossless stem: ~2.6 Mbps, below the previous clip's 4.6, so
- * the weight is the length, not the rate. Exactly 16:9, so `object-cover` crops nothing.
- * Every BOX value is still the original's: the 16:9 container, the 80px gap, the section
- * padding, and the mute toggle's geometry.
+ * public, for exactly that reason. As of 2026-09-29 this plays `public/video/landing-vid.mp4`
+ * — the "Pipeline assistant" laptop clip, 1920x1080, 30fps, 25.5s, 1.5MB, H.264 + AAC. It
+ * was the home page's LandingVideo clip until the user swapped the two sections' clips the
+ * same day; clix's 2:07 ad (`clix-ad.mp4`, 41MB) played here briefly and went the other
+ * way, where LandingVideo's `preload="none"` visibility gate keeps it off the wire until
+ * someone scrolls to it. This block autoplays at the top of the page, so the light clip is
+ * the right one here. Exactly 16:9, so `object-cover` crops nothing. Every BOX value is
+ * still the original's: the 16:9 container, the 80px gap, the section padding, and the
+ * mute toggle's geometry.
  *
- * `clix-ad-poster.jpg` is frame 0 of that mp4. The ad opens on a near-black frame, so the
- * poster is dark on purpose: it and the first painted frame are the same image and there
- * is no visible swap when the clip starts.
+ * `landing-vid-poster.jpg` is frame 0 of that mp4, so the poster and the first painted
+ * frame are the same image and there is no visible swap when the clip starts.
  */
 
 import { useRef, useState } from "react";
@@ -53,8 +51,8 @@ export default function ClixVideo() {
           <video
             ref={ref}
             className="h-full w-full object-cover"
-            src="/video/clix-ad.mp4"
-            poster="/video/clix-ad-poster.jpg"
+            src="/video/landing-vid.mp4"
+            poster="/video/landing-vid-poster.jpg"
             autoPlay
             loop
             muted={muted}
