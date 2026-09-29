@@ -33,7 +33,7 @@ Spec + all measured values: [features/felix-page/](../features/felix-page/).
 | # | Framer name | Status | Notes |
 |---|---|---|---|
 | 1 | `Hero` | **`review`** | **Built** → `src/components/clix/ClixHero.tsx`. Headline is three boxes, not one string; the rotating word sits in a **fixed-width** box (270/306px) so the row's centre never moves. 92/72/56px, `-0.06em`, `100%`, `forest`. Enter state measured exactly; hold/swap/exit estimated. ⚠️ Word list is **2 of an unknown number** — lazily-loaded code component, bundle grep and six live fetches both came up dry. Not visually diffed at any tier. |
-| 2 | `Video` | **`review`** | Boxes measured (`128px 40px 80px`, gap 80, 16:9 container, mute-toggle button). Needs a video — rogo's is rogo's. `public/video/hero-clix.mp4` is a candidate. |
+| 2 | `Video` | **`review`** | Boxes measured (`128px 40px 80px`, gap 80, 16:9 container, mute-toggle button). Plays clix's own ad, `public/video/clix-ad.mp4` (2:07, AI voiceover removed; since 2026-09-29). |
 | 3 | `Logo Proof` | **`review`** | Boxes measured (`40px 40px 164px`, gap 108). 24 inline SVG logos; we have 14 vendored, 10 have no source. |
 | 4 | `Manifesto` | **`review`** | Boxes measured (`164px 40px 64px`, gap 80; text column max-w **550px**, title max-w 300/240px; 48/40px title, 20px body at `-0.2px`/`140%`). **Blocked on the backdrop's scroll-driven colour** — the type is white and nothing static explains it. |
 | 5 | `Product Visuals` | `blocked` | Boxes measured (`256px 40px 96px`, gap 80). Tabbed: Banking / Private Markets / Public Markets over Decks / Spreadsheets / Reports, on three 4000×2667 photos we don't have. |

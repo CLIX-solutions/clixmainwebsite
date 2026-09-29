@@ -15,7 +15,22 @@ Line format:
 
 ---
 
-## 2026-09-27
+## 2026-09-29
+
+- `setup` — **AI voiceover removed from `new-advertise-video.mp4`** (repo root, untracked; 2:07
+  1080p60 CLIX motion-graphics ad: TTS voice over a synth music bed + risers/whooshes). Split with
+  BS-Roformer (`model_bs_roformer_ep_317_sdr_12.9755`, audio-separator 0.47.0 in a scratch venv;
+  that release is missing `audioread`, install it by hand). **CPU took 47 min** for 127 s; the
+  RTX 2050 would need the ~2.5 GB CUDA torch build, so ask before a second pass. Background muxed
+  back as `new-advertise-video-no-voice.mp4`: video stream copied, AAC 256k, 44.1→48 kHz via soxr,
+  sync/length identical. **Background is −25.8 LUFS vs the mix's −15.2** (bed was mixed under the
+  voice) — left at its mixed level, boost offered. Voice absence checked on spectrograms only;
+  **awaiting the user's listen.**
+- `felix-page` — **User approved the voice-free cut; `/clix`'s Video block now plays it** as
+  `public/video/clix-ad.mp4` (2:07, 1080p60, CRF 23 → 41MB at ~2.6 Mbps, from the 55MB
+  master; poster = frame 0, which is dark). `clix-hero-hd.mp4` + poster left unreferenced.
+  The voiced original is gone from the root (the user's move); the no-voice mp4 is the
+  master. Not rendered in a browser. → [detail](../features/felix-page/CONTEXT.md)
 
 - `analytics` / `infra` — **Umami installed, site side** (the boss's "how many visit, where they
   stop, how many leave, how many clicks"). Tracker in `<head>` of both root layouts after the Ads

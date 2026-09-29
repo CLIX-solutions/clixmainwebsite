@@ -6,21 +6,20 @@
  *
  * ⚠️ THE CLIP IS OURS, NOT THE TARGET'S. The original plays a Framer-hosted mp4 that is
  * rogo's property. This repo already removed rogo's `hero-original.mp4` once the repo went
- * public, for exactly that reason. As of 2026-08-20 this plays
- * `public/video/clix-hero-hd.mp4` — 1920x1086, 10s, 5.8MB, H.264. This is the SECOND
- * Higgsfield upscale of the same 848x480 source (`new-clix-hero-vid.mp4`, deleted). The
- * first run used the DIFFUSION "Topaz Video" model and failed twice: it painted a hard dark
- * line along the bottom edge (cropped out in an interim version) and denoised the intro's
- * sparse dot field into blur for the first ~2s. This run used the classical model instead
- * and profiled clean on all four edges AND in the intro, so nothing is cropped. The
- * 2544x1440 / 18.5MB delivery (`new-hd-hero.mp4`, kept untracked as the master) was
- * transcoded here with `scale=1920:-2, libx264 crf 22` — the box never renders wider than
- * ~1900px, so 1440p is pure payload. 1.767:1 against the 1.77778 box, so `object-cover`
- * crops a sliver top/bottom. Every BOX value is still the original's: the 16:9 container,
- * the 80px gap, the section padding, and the mute toggle's geometry.
+ * public, for exactly that reason. As of 2026-09-29 this plays `public/video/clix-ad.mp4`
+ * — clix's own 2:07 ad, 1920x1080 at 60fps, 41MB, H.264. The ad was delivered with an AI
+ * voiceover; that was split off with BS-Roformer and only the music bed and sound effects
+ * remain, so the audio sits ~10 LU below the voiced mix (-25.8 LUFS). Quiet behind the
+ * Unmute toggle is the mix, not a broken track. Transcoded from the voice-free master
+ * (`new-advertise-video-no-voice.mp4`, 55MB, kept untracked) with `libx264 -preset slow
+ * -crf 23`, AAC 128k from the lossless stem: ~2.6 Mbps, below the previous clip's 4.6, so
+ * the weight is the length, not the rate. Exactly 16:9, so `object-cover` crops nothing.
+ * Every BOX value is still the original's: the 16:9 container, the 80px gap, the section
+ * padding, and the mute toggle's geometry.
  *
- * `clix-hero-hd-poster.jpg` is frame 0 of that mp4, so the poster and the first painted
- * frame are the same image and there is no visible swap when the clip starts.
+ * `clix-ad-poster.jpg` is frame 0 of that mp4. The ad opens on a near-black frame, so the
+ * poster is dark on purpose: it and the first painted frame are the same image and there
+ * is no visible swap when the clip starts.
  */
 
 import { useRef, useState } from "react";
@@ -54,8 +53,8 @@ export default function ClixVideo() {
           <video
             ref={ref}
             className="h-full w-full object-cover"
-            src="/video/clix-hero-hd.mp4"
-            poster="/video/clix-hero-hd-poster.jpg"
+            src="/video/clix-ad.mp4"
+            poster="/video/clix-ad-poster.jpg"
             autoPlay
             loop
             muted={muted}

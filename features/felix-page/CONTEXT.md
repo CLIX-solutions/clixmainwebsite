@@ -38,7 +38,8 @@ only just replaced. **Lifting it is the user's call**, and now a cheap one.
    `#clix-capabilities` (renamed from `#clix-testimonials` on 2026-08-13); that `querySelector`
    is optional by design, so a missed rename degrades silently rather than throwing.
 2. **assets** — 3 photos and 24 logos, still rogo's property. Blocks 3, 5. **Block 2's video
-   is closed as of 2026-08-13** — it plays clix's own `clix-demo.mp4`, not a borrowed clip.
+   is closed as of 2026-08-13** — it plays clix's own clip, not a borrowed one; since
+   2026-09-29 that is the voice-free ad, `clix-ad.mp4`.
 
 **Status:** `review`
 **Next action:** look at it at all four tiers — nothing here has been pixel-diffed. Then the
@@ -48,6 +49,29 @@ pass.
 ---
 
 ## Log
+
+### 2026-09-29 — the Video block plays clix's own ad, AI voiceover removed
+
+**Asked:** a screenshot of this block + "change this video to that no voice", meaning the
+voice-free cut of the user's new ad made earlier the same day (global CONTEXT, 2026-09-29).
+
+- **`ClixVideo` now plays `public/video/clix-ad.mp4`** (2:07, 1920×1080, 60fps, 41MB),
+  replacing `clix-hero-hd.mp4`. Exactly 16:9, so `object-cover` no longer trims the sliver
+  the 1.767:1 clip lost. Box values untouched.
+- **Audio is the music bed + SFX only.** The AI voice was split off with BS-Roformer; the
+  result is −25.8 LUFS against the voiced mix's −15.2, so Unmute is quiet by design.
+- **Transcode:** from `new-advertise-video-no-voice.mp4` (55MB, 3.2 Mbps, untracked master
+  in the repo root; the user removed the voiced original, and this file carries a bit-exact
+  copy of its video stream) with `libx264 -preset slow -crf 23`, AAC 128k encoded once from
+  the lossless stem, `+faststart` → **41MB at ~2.6 Mbps**, below the old clip's 4.6. CRF 23
+  took only 26% off the master; a side-by-side crop at 96s showed no gradient banding.
+  H.264 level 5.0, the same as the clip it replaces. A smaller file would mean a higher CRF
+  or 30fps, which is the user's call.
+- **Poster is frame 0** (`clix-ad-poster.jpg`, `-frames:v 1 -q:v 3`, 14.7KB): near-black
+  with a blue glow, because the ad opens dark.
+- **`clix-hero-hd.mp4` + poster are now unreferenced**, left in `public/video/` pending the
+  user's call, as with the earlier swaps.
+- **Not rendered in a browser**; the user checks it.
 
 ### 2026-08-20 (fourth pass) — second Higgsfield run replaces the clip; both artifacts gone at the source
 
