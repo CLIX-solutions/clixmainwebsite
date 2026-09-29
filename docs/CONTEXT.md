@@ -31,6 +31,38 @@ Line format:
   master; poster = frame 0, which is dark). `clix-hero-hd.mp4` + poster left unreferenced.
   The voiced original is gone from the root (the user's move); the no-voice mp4 is the
   master. Not rendered in a browser. → [detail](../features/felix-page/CONTEXT.md)
+- `felix-page` — **User: the music "sometimes high, sometimes low."** Cause confirmed: the
+  original mix ducked the music under the voice, and the voice-free stem kept the dips — its
+  swells line up with the voice's gaps. `dynaudnorm` alone (f=250, g=15, ~3.75s window) was
+  too slow for ~1s swells: LRA 17.9 → 12.2. Adding `acompressor` (threshold 0.06, ratio 3,
+  attack 30ms, release 350ms, makeup 2) + `alimiter` 0.89 → **LRA 6.2 LU, −20.3 LUFS**,
+  peak −3.3 dBFS. Preview `clix-ad-leveled-preview.mp4` (repo root, untracked; site video
+  stream copied). **Site file unchanged until the user approves.** Raising the dips may make
+  leftover voice traces more audible.
+- `felix-page` — **User: still inconsistent; asked for something "out of the box."** Measured
+  the ducking: music median **−45.8 dB while the voice speaks vs −32.2 dB in its gaps** (~14 dB
+  duck, over most of the 2:07). **Un-ducked** it (scratch `unduck.py`): gate on the voice stem,
+  grid-searched for the steadiest music → threshold −35 dB, attack 40ms, release 500ms,
+  **+23.5 dB** where the voice was, then `alimiter` 0.89. Momentary 10–90% range **16.5 → 7.6
+  dB** (compressor version: 13.4); −20.5 LUFS, LRA 6.3. Preview `clix-ad-unducked-preview.mp4`
+  (root, untracked). ⚠️ That region's music was ~14 dB under a full-level voice, so leftover
+  voice traces sit closer to the music there; +23.5 dB lifts both. Fallbacks offered: new
+  royalty-free bed, or no audio.
+- `felix-page` — **User heard the AI voice in the un-ducked preview** (the predicted
+  trade-off). Offered: second separation pass, half-strength un-duck, new music, no audio.
+  **User chose a new royalty-free music track**, picked by them (I can't audition). Waiting on
+  the file. Both previews stay unused.
+- `felix-page` — **New bed: user's `bg-music.mp3`** (repo root, untracked; 2:24, 256k MP3,
+  mastered hot at −8.0 LUFS, LRA 3.8, no lead-in silence, 1.5s silent tail). Used from 0s,
+  cut at 126.848s (the video's audio length), 1s fade-in + 3s fade-out (also smooths the
+  loop), −8 dB → **−16.2 LUFS, LRA 3.7, peak −6.9 dBFS**; no compression needed. Preview
+  `clix-ad-newmusic-preview.mp4` (root, untracked; site video copied). The synced whooshes
+  are gone with the old bed. **Source/licence of the track not yet recorded — asked.**
+- `landing-video` / `felix-page` — **User approved the new music, then swapped the two
+  clips.** `clix-ad.mp4` now carries `bg-music.mp3` (−16.2 LUFS; picture byte-identical,
+  streamhash-checked) and plays on `/` in `LandingVideo`, behind its `preload="none"` gate;
+  `/clix`'s `ClixVideo` plays `landing-vid.mp4` (1.5MB). Only `src`/`poster` and header notes
+  changed. Not rendered in a browser. → [detail](../features/landing-video/CONTEXT.md)
 
 - `analytics` / `infra` — **Umami installed, site side** (the boss's "how many visit, where they
   stop, how many leave, how many clicks"). Tracker in `<head>` of both root layouts after the Ads

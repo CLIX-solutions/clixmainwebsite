@@ -38,10 +38,16 @@ so this section carries the small half at both ends. Copying `/clix`'s `pt-32` w
 
 ## Asset
 
-- `public/video/landing-vid.mp4` — 1920×1080, 25.5s, 3.5MB, supplied by the user.
-- `public/video/landing-vid-poster.jpg` — 12KB, **generated** from frame 0
-  (`ffmpeg -vf "select=eq(n\,0)" -frames:v 1`), so the poster and the first painted frame are
-  the same image and there is no swap when playback starts. Same trick as `clix-demo-poster.jpg`.
+**Since 2026-09-29 (user's swap with `/clix`):**
+
+- `public/video/clix-ad.mp4` — clix's own ad, 1920×1080, 60fps, 2:07, 41MB (H.264 CRF 23,
+  ~2.6 Mbps). **Audio is a royalty-free song the user supplied** (`bg-music.mp3`), not the
+  ad's: 1s fade-in, 3s fade-out, −16 LUFS. The ad's AI voiceover and its ducked music bed
+  are both gone. ⚠️ Source/licence of the song not yet recorded.
+- `public/video/clix-ad-poster.jpg` — 15KB, frame 0 (`-frames:v 1 -q:v 3`). Near-black,
+  because the ad opens dark.
+- The old pair, `landing-vid.mp4` (1920×1080, 25.5s, 1.5MB with AAC since 2026-08-19) and
+  `landing-vid-poster.jpg`, now play on `/clix` in `ClixVideo`.
 
 Playback: `loop muted playsInline preload="none"`, no `controls`, **no `autoPlay`** (see the
 visibility gate below) **and no mute toggle** (see below that).

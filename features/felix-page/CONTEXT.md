@@ -39,7 +39,7 @@ only just replaced. **Lifting it is the user's call**, and now a cheap one.
    is optional by design, so a missed rename degrades silently rather than throwing.
 2. **assets** — 3 photos and 24 logos, still rogo's property. Blocks 3, 5. **Block 2's video
    is closed as of 2026-08-13** — it plays clix's own clip, not a borrowed one; since
-   2026-09-29 that is the voice-free ad, `clix-ad.mp4`.
+   2026-09-29 that is `landing-vid.mp4`, swapped in from the home page.
 
 **Status:** `review`
 **Next action:** look at it at all four tiers — nothing here has been pixel-diffed. Then the
@@ -49,6 +49,29 @@ pass.
 ---
 
 ## Log
+
+### 2026-09-29 (later) — the ad got new music, then swapped places with the home page clip
+
+**Asked:** the user noticed the voice-free music "sometimes high, sometimes low," then asked
+for something "out of the box," and finally: *"switch the video from the main landing page
+video and the video from clix section."*
+
+- **Why the music swung:** the original mix ducked it under the voice. Music median was
+  −45.8 dB while the voice spoke vs −32.2 dB in the gaps (~14 dB), over most of the 2:07.
+- **Tried, not shipped:** (1) `dynaudnorm` + `acompressor` + `alimiter` → LRA 17.9 → 6.2, but
+  swings remained (momentary 10–90% range 13.4 dB). (2) Un-ducking keyed on the voice stem
+  (grid-searched: −35 dB gate, 40/500 ms, +23.5 dB) → range 7.6 dB, but **the user heard the
+  AI voice** — the traces under a full-level voice rise with the music.
+- **Shipped audio:** a royalty-free song the user supplied (`bg-music.mp3`, untracked; 2:24,
+  mastered at −8 LUFS, LRA 3.8). Taken from 0s, cut at 126.848s, 1s fade-in / 3s fade-out,
+  −8 dB → −16.2 LUFS, LRA 3.7, peak −6.9 dBFS, AAC 128k. Picture byte-identical (video
+  streamhash MD5 `de5426b2…` before and after). Synced whooshes lost with the old bed.
+  ⚠️ Song source/licence not yet recorded.
+- **Then the swap:** `ClixVideo` → `landing-vid.mp4` + `landing-vid-poster.jpg` (1920×1080,
+  30fps, 25.5s, 1.5MB, AAC); the ad → the home page's `LandingVideo`. This block autoplays at
+  the top of the page, so it now pulls 1.5MB instead of 41MB. `clix-hero-hd.mp4` + poster
+  are still unreferenced.
+- Not rendered in a browser.
 
 ### 2026-09-29 — the Video block plays clix's own ad, AI voiceover removed
 
