@@ -38,15 +38,15 @@
  * each gap — py-10 phone, py-20 from 810 — and the two neighbours supply the rest. Copying
  * /clix's pt-32 here would have stacked 196px of air under the testimonial heading.
  *
- * `landing-vid-poster.jpg` is frame 0 of the mp4 (ffmpeg `select=eq(n,0)`), so the poster and
- * the first painted frame are the same image and there is no visible swap when the clip
- * starts. Same trick as clix-demo-poster.jpg.
+ * `clix-ad-poster.jpg` is frame 0 of the mp4 (ffmpeg `-frames:v 1`), so the poster and the
+ * first painted frame are the same image and there is no visible swap when the clip starts.
+ * The ad opens on a near-black frame, so the poster is dark on purpose.
  *
  * ⚠️ IT ONLY PLAYS WHILE IT IS ON SCREEN (user's call, 2026-08-18), AND THAT IS WHY THERE IS NO
  * `autoPlay` ATTRIBUTE. An IntersectionObserver owns playback end to end: `autoPlay` would have
  * started the clip during hydration — this section sits below the fold on every tier — and the
  * observer would then have had to stop something that should never have started, wasting a
- * 1.4MB fetch on visitors who never scroll this far. The observer's first callback fires on
+ * 41MB fetch on visitors who never scroll this far. The observer's first callback fires on
  * observe(), so "visible on load" takes the same code path as every later case; there is no
  * separate initial-state branch.
  *
@@ -55,8 +55,18 @@
  * quarter of the frame is in view and stops when it is not; one number, both directions, so
  * there is no hysteresis band to reason about.
  *
- * The clip is 1920×1080, 25.5s, 1.4MB — re-exported 2026-08-19 with an AAC audio track (and a
- * smaller video bitrate; it was 3.5MB silent). Probed with ffprobe, not assumed.
+ * As of 2026-09-29 the clip is `clix-ad.mp4`: clix's own ad, 1920×1080, 60fps, 1:59, 41MB,
+ * swapped in from /clix at the user's ask (/clix now plays the old landing-vid.mp4). The
+ * delivered cut ran 2:07; 1:10–1:18, an empty stretch the voiceover used to fill, is cut out
+ * (from the master, encoded once). At 41MB the visibility gate and `preload="none"` matter
+ * more than they did at 1.4MB. ⚠️ THE AUDIO IS NOT THE AD'S OWN. The ad came with an AI
+ * voiceover over a music bed ducked ~14 dB beneath it, and no separation of the two came out
+ * both clean and steady. The track is a royalty-free song the user supplied (`bg-music.mp3`,
+ * untracked), run unbroken across the cut with a 1s fade-in and a 3s fade-out (which also
+ * quiets the loop seam), plus the ad's sound effects REBUILT from synthesized noise and sine
+ * booms at the original timings, since the extracted ones carried old music. −18.7 LUFS:
+ * the song sits 3 dB under the first −16 LUFS mix at the user's ask, with the effects unchanged.
+ * Probed with ffprobe, not assumed.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -119,11 +129,11 @@ export default function LandingVideo() {
           <video
             ref={ref}
             className="h-full w-full object-cover"
-            src="/video/landing-vid.mp4"
-            poster="/video/landing-vid-poster.jpg"
+            src="/video/clix-ad.mp4"
+            poster="/video/clix-ad-poster.jpg"
             /* `none` is the pairing the visibility gate earns: this section is below the fold
-               at every tier, so a visitor who never scrolls to it costs 12KB of poster instead
-               of 1.4MB of mp4. The poster IS frame 0, so the fetch that starts when the
+               at every tier, so a visitor who never scrolls to it costs 15KB of poster instead
+               of 41MB of mp4. The poster IS frame 0, so the fetch that starts when the
                observer fires is invisible — the first painted frame matches what was already
                on screen. Same call Testimonials makes for its six client clips. */
             preload="none"
