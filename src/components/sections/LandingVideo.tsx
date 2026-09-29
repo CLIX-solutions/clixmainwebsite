@@ -55,14 +55,18 @@
  * quarter of the frame is in view and stops when it is not; one number, both directions, so
  * there is no hysteresis band to reason about.
  *
- * As of 2026-09-29 the clip is `clix-ad.mp4`: clix's own 2:07 ad, 1920×1080, 60fps, 41MB,
- * swapped in from /clix at the user's ask (/clix now plays the old landing-vid.mp4). At 41MB
- * the visibility gate and `preload="none"` matter more than they did at 1.4MB. ⚠️ THE AUDIO IS
- * NOT THE AD'S OWN. The ad came with an AI voiceover over a music bed ducked ~14 dB beneath
- * it, and no separation of the two came out both clean and steady, so the track is a
- * royalty-free song the user supplied (`bg-music.mp3`, untracked), cut to 2:07 with a 1s
- * fade-in and a 3s fade-out, which also makes the loop seam quiet, at −16 LUFS. Probed with
- * ffprobe, not assumed.
+ * As of 2026-09-29 the clip is `clix-ad.mp4`: clix's own ad, 1920×1080, 60fps, 1:59, 41MB,
+ * swapped in from /clix at the user's ask (/clix now plays the old landing-vid.mp4). The
+ * delivered cut ran 2:07; 1:10–1:18, an empty stretch the voiceover used to fill, is cut out
+ * (from the master, encoded once). At 41MB the visibility gate and `preload="none"` matter
+ * more than they did at 1.4MB. ⚠️ THE AUDIO IS NOT THE AD'S OWN. The ad came with an AI
+ * voiceover over a music bed ducked ~14 dB beneath it, and no separation of the two came out
+ * both clean and steady. The track is a royalty-free song the user supplied (`bg-music.mp3`,
+ * untracked), run unbroken across the cut with a 1s fade-in and a 3s fade-out (which also
+ * quiets the loop seam), plus the ad's sound effects REBUILT from synthesized noise and sine
+ * booms at the original timings, since the extracted ones carried old music. −18.7 LUFS:
+ * the song sits 3 dB under the first −16 LUFS mix at the user's ask, with the effects unchanged.
+ * Probed with ffprobe, not assumed.
  */
 
 import { useEffect, useRef, useState } from "react";
