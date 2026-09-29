@@ -4,6 +4,30 @@ Newest first. Decisions and measurements, not narration.
 
 ---
 
+## 2026-09-29 (later) — effects back (rebuilt), empty stretch cut, music lowered
+
+**Asks, in order:** "this doesn't have the sound effects anymore, we need those" → "can't you
+recreate the effect yourself? i kinda hear the old music in the background in some effects"
+→ "crop the video from 1:10 to 1:18" → "lower the background music a little" → "commit",
+plus "remove the unused mp4 in root".
+
+- **Effects, attempt 1 (not shipped):** HPSS on the voice-free bed. Sustained parts are the
+  old pads, the rest the effects. The user heard old music in them.
+- **Effects, shipped:** rebuilt with no original samples (`recreate_sfx.py`, scratch; method
+  and thresholds in the global CONTEXT, 2026-09-29): noise vocoded to the guide's band
+  envelopes, gated to rises over a slow floor and, below 600 Hz, only after a sudden ≥ 9 dB
+  jump; plus 60 synthesized 95→45 Hz sine booms at detected hits. Tonal blips return as
+  noise bursts.
+- **Cut:** 1:10–1:18 is empty frame (phone exits ~1:09.75, dashboard in ~1:19.4), so "crop"
+  was read as *remove*, confirmed from frames. Frame-exact (60fps, frames 4200–4679) from the
+  master, one CRF 23 encode → 1:58.87, 40.8MB. The song runs unbroken over the new length;
+  the effects are cut with the picture, with an 80ms crossfade centred on the cut.
+- **Music −3 dB, effects unchanged, not re-normalized** (that would have lifted the effects
+  back) → −18.7 LUFS, LRA 4.4, peak −0.2 dBFS.
+- **Root cleanup:** five previews and the 55MB master went to the Recycle Bin (recoverable,
+  not `rm`). `bg-music.mp3` stays (not an mp4, and it's the song's only local copy).
+- Rendered? Served by the dev server (200, correct size), but not viewed in a browser by me.
+
 ## 2026-09-29 — plays clix's ad now (swapped with `/clix`), with the user's music
 
 **Ask:** *"switch the video from the main landing page video and the video from clix

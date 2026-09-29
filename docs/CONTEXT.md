@@ -63,6 +63,41 @@ Line format:
   streamhash-checked) and plays on `/` in `LandingVideo`, behind its `preload="none"` gate;
   `/clix`'s `ClixVideo` plays `landing-vid.mp4` (1.5MB). Only `src`/`poster` and header notes
   changed. Not rendered in a browser. → [detail](../features/landing-video/CONTEXT.md)
+- `landing-video` — **User: "doesn't have the sound effects anymore, we need those."**
+  audio-separator's 169 models have no effects/DnR stem, so the SFX were pulled from the
+  voice-free bed with HPSS (scratch `split_sfx.py`: librosa, n_fft 4096 / hop 1024, kernel
+  61×31, margin 2 on harmonic). Sustained → old pads/drone (−30.1 LUFS); the rest → whooshes,
+  riser, impacts (−29.3), plus some of the drone's low rumble. Mix: `bg-music` −6 dB (song ~7 LU
+  over the SFX, near the original's music:SFX balance, not buried at −16) + SFX, then +5.8 dB
+  → **−16.0 LUFS, LRA 4.0**, `alimiter` 0.89. Preview `clix-ad-sfx-preview.mp4` (root,
+  untracked). **Site file still has music only** until the user approves.
+- `landing-video` — **User heard old music inside the extracted effects and asked for them
+  recreated.** Scratch `recreate_sfx.py` rebuilds them with **no original samples**, using the
+  HPSS layer as a guide only: (1) whooshes/riser = fresh noise vocoded by 24 log bands (150 Hz
+  –16 kHz) of the guide, gated to rises 4–12 dB above each band's 6s 10th-percentile floor;
+  bands < 600 Hz also need a sudden ≥ 9 dB/70 ms rise (0.6s hold), since the old drone swells
+  slowly there; (2) impacts = synthesized 95→45 Hz sine booms at the guide's 30–150 Hz hits
+  (≥ 12 dB jump in 70 ms, within 24 dB of the loudest, louder-wins 0.3s spacing) → 60 hits,
+  sized by the one-sided Hann relation A = band mag / (N·√(3/32)). Two detector bugs fixed on
+  the way: flux peak-picking missed slow-rising hits, and its cooldown swallowed the hit after
+  a weak one. Rebuilt SFX −31.2 LUFS (guide −29.3); mixed +2 dB with `bg-music` −6 dB → −16.0
+  LUFS, LRA 4.0. Preview `clix-ad-sfx2-preview.mp4`. Tonal blips come back as noise bursts.
+- `landing-video` — **User: "crop the video from 1:10 to 1:18"** — that stretch is empty
+  frame (the phone exits at ~1:09.75, the dashboard fades in at ~1:19.4), so it was read as
+  *remove*, and the frames confirm it. Cut frame-exact from the master (60fps: frames
+  4200–4679, `trim`+`concat`), one CRF 23 encode → 1:58.87, 7132 frames, **40.8MB**. Song
+  laid unbroken over the new 118.848s (fades moved); rebuilt SFX cut at the same point with
+  an 80ms crossfade centred on it. −16.0 LUFS, LRA 4.0, peak −0.6. **Installed in
+  `public/video/clix-ad.mp4` + poster (frame 0 unchanged), uncommitted**, so the user can
+  check it on the running dev server.
+- `landing-video` — **User: "lower the background music a little."** Song −3 dB (−9 dB in the
+  mix chain), effects and the +5.9 dB master gain unchanged. Deliberately **not**
+  re-normalized, because that would have raised the effects back up. → −18.7 LUFS, LRA 4.4,
+  peak −0.2. Remuxed; picture streamhash unchanged. Still uncommitted.
+- `setup` — **Root mp4s removed at the user's ask:** five `clix-ad-*-preview.mp4` and the 55MB
+  `new-advertise-video-no-voice.mp4` master → **Recycle Bin** (recoverable). Future re-cuts
+  start from the served 40.8MB file unless the master is restored. `bg-music.mp3` kept.
+  Then committed. → [detail](../features/landing-video/CONTEXT.md)
 
 - `analytics` / `infra` — **Umami installed, site side** (the boss's "how many visit, where they
   stop, how many leave, how many clicks"). Tracker in `<head>` of both root layouts after the Ads

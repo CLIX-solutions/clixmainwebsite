@@ -40,10 +40,16 @@ so this section carries the small half at both ends. Copying `/clix`'s `pt-32` w
 
 **Since 2026-09-29 (user's swap with `/clix`):**
 
-- `public/video/clix-ad.mp4` — clix's own ad, 1920×1080, 60fps, 2:07, 41MB (H.264 CRF 23,
-  ~2.6 Mbps). **Audio is a royalty-free song the user supplied** (`bg-music.mp3`), not the
-  ad's: 1s fade-in, 3s fade-out, −16 LUFS. The ad's AI voiceover and its ducked music bed
-  are both gone. ⚠️ Source/licence of the song not yet recorded.
+- `public/video/clix-ad.mp4` — clix's own ad, 1920×1080, 60fps, **1:59** (the delivered
+  2:07 minus the empty 1:10–1:18), 40.8MB (H.264 CRF 23, one encode from the master).
+  **Audio is not the ad's own:** a royalty-free song the user supplied (`bg-music.mp3`),
+  unbroken across the cut with a 1s fade-in and 3s fade-out, plus the ad's sound effects
+  rebuilt from synthesized noise and sine booms at the original timings. Song 3 dB under the
+  first mix → −18.7 LUFS, LRA 4.4. The AI voiceover and the old ducked music bed are both
+  gone. ⚠️ Source/licence of the song not yet recorded.
+- **No master left in the repo root.** The 55MB voice-free master was sent to the Recycle Bin
+  at the user's ask (2026-09-29). Any further re-cut starts from this served file, one
+  generation down, unless it's restored from there.
 - `public/video/clix-ad-poster.jpg` — 15KB, frame 0 (`-frames:v 1 -q:v 3`). Near-black,
   because the ad opens dark.
 - The old pair, `landing-vid.mp4` (1920×1080, 25.5s, 1.5MB with AAC since 2026-08-19) and
