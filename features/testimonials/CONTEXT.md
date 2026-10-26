@@ -10,6 +10,57 @@ with no code scanning.
 
 ## Current state
 
+### 2026-10-26 (later) — slot filled, links resolved
+
+The "companies we've worked with" band was built the same day as `clients`
+(`sections/Clients.tsx`, → [features/clients/](../clients/)), in this section's old slot. The
+two dangling links below are **resolved**: nav `customers` and footer `work` now point at
+`/#clients` — a new id rather than reusing `testimonials`, which would name a block that is gone.
+Everything else in the entry below still holds: this component, `home.testimonials` and
+`public/testimonials/` are unmounted, not deleted, and the quotes still ride in `/`'s RSC payload.
+
+### 2026-10-26 — removed from the home page (unmounted, not deleted)
+
+**The ask.** User, against a screenshot of the block (heading, arrows, Nevo Yahaloman's card):
+*"remove this whole section in landing page, we will change it to company we worked with, but
+for now remove it"*. The replacement is a "companies we've worked with" section; the list and
+how it is presented are still to come from the user.
+
+**What changed.** `<Testimonials />` and its import came out of `src/app/_routes/HomeRoute.tsx`,
+with a ⚠️ comment holding the slot. Nothing else in `src/` was touched. Page order is now
+Hero → LandingVideo → WhyRogo → ByTheNumbers → ClixFelixFooter → Footer.
+
+**Unmounted, not deleted, on purpose.** `sections/Testimonials.tsx`, `sections/QuoteCarousel.tsx`,
+`home.testimonials` in both locales (the clients' Hebrew verbatim, the English translations) and
+the six clips + posters in `public/testimonials/` all stay. The ask was "for now", the new
+section's shape is unknown, and this is the user's real client material, so deleting it is a
+separate call. This is NOT the Security precedent (2026-08-18), where the component and its dict
+keys were deleted the same day.
+
+⚠️ **The quotes still ship in `/`'s page source.** `PageDictProvider` serialises the whole `home`
+namespace into the RSC payload, so unmounting stops the render, not the data. Measured on the dev
+server: 0 hits for `id="testimonials"` in the served HTML, 1 hit for Nevo's quote text. Harmless
+(real client words the page rendered until this change), but the section is only fully gone once
+`home.testimonials` is deleted, which means deleting both components with it.
+
+⚠️ **Two links now dangle.** Nav `customers` (`Nav.tsx:145`) and footer `work` (`Footer.tsx:129`)
+both point at `/#testimonials`. The route resolves, the anchor does not; `ViewTransitions` treats a
+missing target as a no-op, so a cross-route click lands at the top of `/` and a same-page click
+does nothing. Left alone because the companies section is the natural target for "Customers":
+when it is built, either give it `id="testimonials"` or rename to `#customers` and repoint both.
+If the gap lasts, Nav.tsx's own rule (an item with nothing to go to is `href: null`, inert) is the
+fallback.
+
+**Neighbours.** The nav theme stays contiguous: `LandingVideo` is `data-nav-theme="light"` on the
+same `bg-canvas`, so the bar has no gap to fall back over. LandingVideo's padding (`py-10` /
+`tablet:py-20`) was sized as the small half of a gap shared with this section's `pb-32` /
+`desktop:pb-20`, so the hero → video gap is now 40 / 80px on its own. Not re-tuned, since the
+companies section is expected to sit back in between.
+
+**Verified:** dev server on :3001 serves `/` at 200 with the section absent and the video present.
+No build, typecheck or lint (user's standing preference), and the page has not been looked at in a
+browser; that is with the user.
+
 ### 2026-08-14 — the phone tier became the slideshow, and the player became a byline tile
 
 **The ask.** "How can we make this part show the video when in mobile view — I can think of it

@@ -1,6 +1,6 @@
 import Nav from "@/components/sections/Nav";
 import Hero from "@/components/sections/Hero";
-import Testimonials from "@/components/sections/Testimonials";
+import Clients from "@/components/sections/Clients";
 import LandingVideo from "@/components/sections/LandingVideo";
 import WhyRogo from "@/components/sections/WhyRogo";
 import ByTheNumbers from "@/components/sections/ByTheNumbers";
@@ -35,10 +35,20 @@ export default async function HomeRoute({ locale }: { locale: Locale }) {
         <Nav models={models} />
         <main>
           <Hero />
-          <Testimonials />
-          {/* Added 2026-08-18 — /clix's video treatment, on the home page's rhythm.
-              Sits between the testimonials and the services list, so it carries the small
-              half of each gap; see the padding note in LandingVideo.tsx. */}
+          {/* ⚠️ `<Testimonials />` ("In our clients' own words") WAS HERE AND WAS REMOVED
+              2026-10-26 at the user's request, against a screenshot of the block. The component,
+              its QuoteCarousel, `home.testimonials` and public/testimonials/ are all still in
+              the repo, only unmounted — so the quotes still ride in this page's RSC payload
+              until that dictionary key goes.
+
+              Added the same day in its place: the clients band, direction 5 ("Columns") of the
+              five the user was shown. A server component; its lanes are pure CSS. It carries
+              `#clients`, which the nav's Customers link and the footer's Work link were
+              repointed to from `/#testimonials`. See Clients.tsx. */}
+          <Clients />
+          {/* Added 2026-08-18 — /clix's video treatment, on the home page's rhythm. Its
+              padding is the small half of a gap shared with the band above — the testimonials
+              until 2026-10-26, the clients band since. See LandingVideo.tsx. */}
           <LandingVideo />
           <WhyRogo />
           {/* ⚠️ `<Security />` USED TO BE THE LAST SECTION HERE AND WAS REMOVED 2026-08-18 at

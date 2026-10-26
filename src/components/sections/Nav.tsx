@@ -142,7 +142,10 @@ const LINKS: { key: string; href: string | null }[] = [
      placeholder photograph. See src/app/company/page.tsx. A crawler directive is not a reason
      to hide a real, reachable page from the nav. */
   { key: "company", href: "/company" },
-  { key: "customers", href: "/#testimonials" },
+  /* Repointed 2026-10-26 from `/#testimonials`: the quote block came off the home page that
+     day, and the clients band that took its slot carries `#clients`. Same job as before — the
+     page's answer to "who does clix work for". */
+  { key: "customers", href: "/#clients" },
   /* Live since 2026-08-11 — /news is the rogo.com/news clone carrying the AI digest. */
   { key: "news", href: "/news" },
 ];

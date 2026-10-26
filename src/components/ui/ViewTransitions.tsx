@@ -39,7 +39,8 @@
  * plain `router.push`. That is an instant swap with no flash — the correct degradation, since
  * the flash was the bug and the crossfade is the enhancement.
  *
- * THE HASH LANDING (2026-08-13). Nav's "Customers" points at `/#testimonials`. From any other
+ * THE HASH LANDING (2026-08-13). Nav's "Customers" points at a home-page hash — `/#clients`
+ * since 2026-10-26, `/#testimonials` when this was written. From any other
  * route that is a real navigation, so it comes through here — and it arrived at the top of the
  * home page instead of at the section. The cause is `html { scroll-behavior: smooth }` in
  * globals.css. Next's own hash scroll (`ScrollAndFocusHandler` in layout-router) wraps its

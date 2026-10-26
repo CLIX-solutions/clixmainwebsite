@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * LandingVideo — the 16:9 clip that sits under the testimonials on /.
+ * LandingVideo — the 16:9 clip that sits under the clients band on /.
  *
  * ⚠️ THIS IS A DELIBERATE COPY OF ClixVideo's TREATMENT, not a shared component. The user's
  * ask (2026-08-18) was "make it just like the hero video from clix section", so the frame is
@@ -33,10 +33,11 @@
  * `bg-canvas` home sections, /clix's floats over ClixBackdrop), and now the controls. Sharing
  * would have meant a prop for each — more coupling than the ~40 lines it saves.
  *
- * PADDING is the home page's rhythm, not /clix's: Testimonials closes on pb-32 / pb-20
- * (desktop) and WhyRogo opens on pt-20 / pt-24, so this section carries the SMALL half of
- * each gap — py-10 phone, py-20 from 810 — and the two neighbours supply the rest. Copying
- * /clix's pt-32 here would have stacked 196px of air under the testimonial heading.
+ * PADDING is the home page's rhythm, not /clix's: the clients band above closes on pb-24 /
+ * pb-28 from 810 (Testimonials' pb-32 / pb-20 until 2026-10-26) and WhyRogo opens on pt-20 /
+ * pt-24, so this section carries the SMALL half of each gap — py-10 phone, py-20 from 810 —
+ * and the two neighbours supply the rest. Copying /clix's pt-32 here would put 240px between
+ * the clients lanes and this frame.
  *
  * `clix-ad-poster.jpg` is frame 0 of the mp4 (ffmpeg `-frames:v 1`), so the poster and the
  * first painted frame are the same image and there is no visible swap when the clip starts.

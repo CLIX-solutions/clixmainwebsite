@@ -470,6 +470,44 @@ html {
   animation-name: clix-marquee-rtl;
 }
 
+/* The clients band's drifting lanes on / (2026-10-26) — the vertical cousin of `.clix-marquee`.
+   Each lane's track holds THREE copies of its tiles and moves by exactly one copy per loop;
+   `animation-duration` and, for the lanes that travel down, `animation-direction: reverse` are
+   set inline by Clients.tsx.
+
+   WHY `- 4px`. The copies are separated by the same 12px `gap` as the tiles inside them, so a
+   track of 3n tiles carries 3n-1 gaps, and one copy's period is n x (tile + 12) = (track + 12) / 3
+   — a third of the track PLUS 4px. A bare -33.333% falls 4px short on every loop and the lane
+   visibly hops. The gap is 12px at every tier, so the constant holds at all of them.
+
+   WHY THREE COPIES. With two, one copy has to be taller than the window plus a gap (612px) or the
+   seam scrolls into view at the end of each loop — and the 4-tile lane is 592px at desktop, 528px
+   at tablet. With three it only has to clear half that.
+
+   No custom property inside the keyframe (the `rows-up` trap noted below), and no RTL variant:
+   the travel is vertical. The reduced-motion clamp at the end of this file brings the lanes to
+   rest, as it does the marquee above. Hovering a lane pauses it, so a logo does not slide out
+   from under the pointer. */
+@keyframes clients-lane {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, calc(-100% / 3 - 4px), 0);
+  }
+}
+
+.clients-lane {
+  animation-name: clients-lane;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.clients-lane:hover {
+  animation-play-state: paused;
+}
+
 /* Hebrew letter-spacing hook — DELIBERATELY EMPTY, and it stays empty until someone measures
    it on Hebrew (2026-08-12).
 
