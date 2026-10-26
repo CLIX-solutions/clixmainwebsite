@@ -15,6 +15,29 @@ Line format:
 
 ---
 
+## 2026-10-26
+
+- `testimonials` — **Unmounted from the home page** at the user's request ("remove this whole
+  section … we will change it to company we worked with"): `<Testimonials />` is out of
+  `HomeRoute.tsx` and nothing else in `src/` was touched. Components, `home.testimonials` and
+  `public/testimonials/` are kept, so the quotes still ship in `/`'s RSC payload until the dict
+  keys go. ⚠️ Nav Customers + footer Work still point at the missing `/#testimonials`. Dev server
+  serves `/` at 200 without the section; not viewed in a browser.
+  → [detail](../features/testimonials/CONTEXT.md)
+- `clients` — **New section started: "Companies we've worked with"**, for the slot the
+  testimonials left. The user's 14 logos (`client-logos/`, untracked) processed to transparent,
+  trimmed PNGs in `features/clients/assets/logos/` (+ `prep_logos.py`). Five directions put on a
+  private Design canvas for the user to pick from: Rotation, Orbit, Torchlight, Spotlight,
+  Columns. None is a marquee (the hero's tool strip is directly above), and all motion is
+  ≤19 px/s (the strips were slowed for dizziness on 2026-08-19). Nothing in `src/` yet; one
+  client's name is unknown (`[Client name]`). → [detail](../features/clients/CONTEXT.md)
+- `clients` — **Built direction 5, "Columns"** (user: "do the 5th one now"): `Clients.tsx`, a
+  server component with CSS-only lanes (`.clients-lane`, three copies, `-100%/3 - 4px` per loop),
+  mounted after the hero; `home.clients` in both locales (Hebrew AUTHORED); logos in
+  `public/clients/` at 2× (317 KB). Nav Customers + footer Work now point at `/#clients`. Grey copy
+  is `ink/60` because `muted` on `canvas` is 4.43:1. `/` and `/he` serve 200 with the band; no
+  build or browser check run. Status `review`. → [detail](../features/clients/CONTEXT.md)
+
 ## 2026-09-29
 
 - `setup` — **AI voiceover removed from `new-advertise-video.mp4`** (repo root, untracked; 2:07
