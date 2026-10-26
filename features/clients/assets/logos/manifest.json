@@ -1,0 +1,100 @@
+[
+ {
+  "slug": "mediora",
+  "name": "Mediora",
+  "w": 640,
+  "h": 199,
+  "ar": 3.2161
+ },
+ {
+  "slug": "aurelle",
+  "name": "Aurelle Diamonds",
+  "w": 640,
+  "h": 476,
+  "ar": 1.3445
+ },
+ {
+  "slug": "talentra",
+  "name": "Talentra",
+  "w": 640,
+  "h": 536,
+  "ar": 1.194
+ },
+ {
+  "slug": "stonecrest",
+  "name": "Stonecrest",
+  "w": 640,
+  "h": 181,
+  "ar": 3.5359
+ },
+ {
+  "slug": "theranote",
+  "name": "TheraNote",
+  "w": 395,
+  "h": 356,
+  "ar": 1.1096
+ },
+ {
+  "slug": "lioneyes",
+  "name": "Lioneyes",
+  "w": 263,
+  "h": 148,
+  "ar": 1.777
+ },
+ {
+  "slug": "mindora",
+  "name": "Mindora",
+  "w": 640,
+  "h": 580,
+  "ar": 1.1034
+ },
+ {
+  "slug": "like-home",
+  "name": "Like Home",
+  "w": 433,
+  "h": 410,
+  "ar": 1.0561
+ },
+ {
+  "slug": "diamond-group",
+  "name": "Diamond Group",
+  "w": 596,
+  "h": 296,
+  "ar": 2.0135
+ },
+ {
+  "slug": "talentbridge",
+  "name": "TalentBridge",
+  "w": 640,
+  "h": 465,
+  "ar": 1.3763
+ },
+ {
+  "slug": "vantor",
+  "name": "Vantor",
+  "w": 640,
+  "h": 372,
+  "ar": 1.7204
+ },
+ {
+  "slug": "lotus-clean",
+  "name": "Lotus Clean",
+  "w": 322,
+  "h": 161,
+  "ar": 2.0
+ },
+ {
+  "slug": "nellyan",
+  "name": "Nellyan",
+  "w": 634,
+  "h": 640,
+  "ar": 0.9906
+ },
+ {
+  "slug": "arch",
+  "name": "[Client name]",
+  "w": 620,
+  "h": 475,
+  "ar": 1.3053
+ }
+]

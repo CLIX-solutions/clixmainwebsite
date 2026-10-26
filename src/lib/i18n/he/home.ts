@@ -73,6 +73,15 @@ export const home: Translated<HomeDict> = {
     ariaLabel: "הכלים שאנחנו בונים איתם",
   },
 
+  clients: {
+    /* AUTHORED. Wraps freely in its column (no authored break), so it needs no box fitting. */
+    heading: "חברות שעבדנו איתן",
+    /* AUTHORED. The nearest real-site line is pages/work's meta description — "מבחר ממערכות
+       ה-AI, האוטומציה וה-CRM שמסרנו לאחרונה ללקוחותינו." — which is about delivered systems,
+       not the companies, so it was not lifted. */
+    body: "כמה מהצוותים שתכננו ובנינו עבורם מערכות ואוטומציות.",
+  },
+
   testimonials: {
     /* SOURCED verbatim — home.bodyText, the kicker directly above
        "שמעו את זה ישירות מהאנשים שהעבודה שלהם השתנתה."

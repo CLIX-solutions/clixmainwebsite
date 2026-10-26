@@ -114,10 +114,11 @@ const GROUPS: LinkGroup[] = [
          Next's bare not-found is worse than no link.
 
          `/product` is the page "Services" means — it is the route describing what clix
-         builds. `/#testimonials` is the home page's client-work band, which the nav already
-         calls "Customers"; it is the only client work on the site, so "Work" resolves there.
-         Note the LEADING SLASH: `#testimonials` alone would be a same-page scroll, correct
-         only in this footer's copy on `/`. `/#testimonials` is a real cross-route navigation
+         builds. `/#clients` is the home page's client band, which the nav already calls
+         "Customers"; it is the only client work on the site, so "Work" resolves there. (It was
+         `/#testimonials`, the quote block, until that came off the page on 2026-10-26.)
+         Note the LEADING SLASH: `#clients` alone would be a same-page scroll, correct
+         only in this footer's copy on `/`. `/#clients` is a real cross-route navigation
          from the other five routes and AppLink's own same-route guard collapses it back to a
          scroll on the home page — see the `/#contact` note in AppLink.tsx.
 
@@ -126,7 +127,7 @@ const GROUPS: LinkGroup[] = [
          different question than the one clicked. Its EN and HE strings came out of the
          dictionaries with it; git has them if the page is ever built. */
       { key: "services", href: "/product" },
-      { key: "work", href: "/#testimonials" },
+      { key: "work", href: "/#clients" },
     ],
   },
   {

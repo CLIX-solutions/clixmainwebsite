@@ -63,6 +63,15 @@ export const home = {
     ariaLabel: "Tools we build with",
   },
 
+  /* The band under the hero since 2026-10-26, in the slot the testimonials left. The fourteen
+     company names are NOT here: they are trademarks paired 1:1 with a logo file, and stay in
+     Clients.tsx for the same reason LogoCarousel's tool names do. (`eyebrow` and `countLabel`
+     came out the same day, with the "Clients" kicker and the "14 companies" figure.) */
+  clients: {
+    heading: "Companies we’ve worked with",
+    body: "A few of the teams we’ve designed, built and automated for.",
+  },
+
   testimonials: {
     /**
      * The heading, as RUNS. `readonly string[]`, not a tuple: the count is line fitting.
